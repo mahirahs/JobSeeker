@@ -1,4 +1,4 @@
-JobSeeker: Easy Job Hunting
+**JobSeeker: Easy Job Hunting**
 
 Overview
 
