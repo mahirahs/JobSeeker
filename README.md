@@ -26,13 +26,17 @@ Features
 Prerequisites
 
     Python 3.7+
+    
     OpenAI Python SDK: Install using pip install openai
+    
     Pandas: Install using pip install pandas
+    
     Job Dataset: A CSV file (us-software-engineer-jobs-updated.csv) containing job listings is required for filtering.
 
 Setup and Installation
 
     Clone or download the repository.
+    
     Install required Python libraries:
         
         pip install openai pandas
@@ -48,6 +52,7 @@ How to Run
 To run the chatbot:
 
     Open a terminal or command prompt.
+   
     Run the script using Python:
 
         python Final.py
@@ -59,9 +64,13 @@ Usage
 When prompted, provide the following details:
 
     Job Title: Your preferred job title (e.g., "Software Engineer").
+
     Location: The preferred job location (e.g., "Remote" or a specific city).
+    
     Contract Type: Full-time or part-time.
+    
     Remote Work Preferences: 100% Remote, Hybrid, or No Remote.
+    
     Visa Sponsorship: Whether visa sponsorship is required (Yes/No).
 
 The chatbot will return a list of job recommendations based on your inputs. You can ask for more recommendations or adjust your search preferences.
