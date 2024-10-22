@@ -2,7 +2,7 @@ import openai
 import pandas as pd
 
 # Set OpenAI API key (Make sure you securely load your API key)
-openai.api_key = "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"
+openai.api_key = "enter_your_openai_key"
 # Load the dataset
 jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
 
