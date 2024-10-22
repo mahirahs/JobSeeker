@@ -29,7 +29,7 @@ def normalize_remote_work(input_text):
     input_text = input_text.lower()
     if "yes" in input_text:
         return "100% Remote"
-    elif "work from home" in input_text or "wfh" in input_text:
+    elif "work from home" in input_text or "wfh" in input_text or "maybe" in input_text:
         return "Hybrid"
     elif "no" in input_text:
         return "No Remote"
