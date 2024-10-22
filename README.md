@@ -7,10 +7,21 @@ JobSeeker is a Python-based job recommendation chatbot that helps users find sui
 The chatbot interacts with users through a conversational flow, gathers job preferences, and provides job recommendations from a dataset of U.S. software engineering jobs.
 Features
 
-    Natural Language Input Normalization: User inputs like job title, location, and remote work preferences are normalized using GPT-3.5-turbo to ensure consistent and relevant filtering.
-    Job Recommendations: Jobs are filtered based on user preferences like location, contract type, remote work options, and visa sponsorship.
-    Interactive Conversation: Users can interact with the chatbot in a friendly, conversational manner, and they can continue the search or refine their preferences.
-    Batch Display of Jobs: Recommendations are shown in batches of five to avoid overwhelming the user, with the option to display more results if desired.
+    Natural Language Input Normalization: 
+    
+    User inputs like job title, location, and remote work preferences are normalized using GPT-3.5-turbo to ensure consistent and relevant filtering.
+    
+    Job Recommendations: 
+    
+    Jobs are filtered based on user preferences like location, contract type, remote work options, and visa sponsorship.
+    
+    Interactive Conversation: 
+    
+    Users can interact with the chatbot in a friendly, conversational manner, and they can continue the search or refine their preferences.
+    
+    Batch Display of Jobs: 
+    
+    Recommendations are shown in batches of five to avoid overwhelming the user, with the option to display more results if desired.
 
 Prerequisites
 
