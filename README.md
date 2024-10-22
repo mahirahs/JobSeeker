@@ -55,7 +55,7 @@ To run the chatbot:
    
     Run the script using Python:
 
-        python Final.py
+        python MainFile.py
 
     Interact with the chatbot by answering its prompts. You can input job preferences, and the chatbot will return job recommendations based on your inputs.
 
