@@ -75,6 +75,10 @@ When prompted, provide the following details:
 
 The chatbot will return a list of job recommendations based on your inputs. You can ask for more recommendations or adjust your search preferences.
 
+OpenAI key:
+
+Replace "enter_your_openai_key" with your OpenAI key. Get your OpenAI key from "https://platform.openai.com/docs/api-reference/authentication"
+
 Example Interaction:
 
 Seeker: Do you want a detailed job search?
