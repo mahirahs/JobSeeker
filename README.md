@@ -33,6 +33,8 @@ Prerequisites
     
     Job Dataset: A CSV file (us-software-engineer-jobs-updated.csv) containing job listings is required for filtering.
 
+    Flask: Install using pip install flask
+
 Setup and Installation
 
     Clone or download the repository.
@@ -48,6 +50,18 @@ Setup and Installation
     Ensure the dataset (us-software-engineer-jobs-updated.csv) is in the same directory as the script.
 
 How to Run
+
+To run the UI:
+
+    Open a terminal or command prompt.
+   
+    Run the script using Python:
+
+        python app.py
+    
+    The website of JobSeeker will be running at the local host:
+        http://127.0.0.1:5000
+
 
 To run the chatbot:
 
