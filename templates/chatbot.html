@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSeeker Chatbot</title>
+    <style>
+        /* Styling for chat window */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+        #chatbox {
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .bot {
+            align-self: flex-start;
+            background-color: #e1ffc7;
+            border: 1px solid #b8e994;
+        }
+        .user {
+            align-self: flex-end;
+            background-color: #d9e6fc;
+            border: 1px solid #a6c1f3;
+        }
+        form {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        input[type="text"] {
+            width: 85%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 15%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        async function sendMessage(event) {
+            event.preventDefault();
+
+            // Get user input
+            const userInput = document.querySelector("input[name='message']").value;
+            if (!userInput) return;
+
+            // Display user's message in chatbox
+            const chatbox = document.getElementById("chatbox");
+            const userMessage = document.createElement("div");
+            userMessage.classList.add("message", "user");
+            userMessage.innerHTML = `<p>${userInput}</p>`;
+            chatbox.appendChild(userMessage);
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            // Clear input field
+            document.querySelector("input[name='message']").value = "";
+
+            // Send user input to Flask server
+            const response = await fetch("/get_response", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message: userInput })
+            });
+            const data = await response.json();
+
+            // Display bot's response in chatbox
+            const botMessage = document.createElement("div");
+            botMessage.classList.add("message", "bot");
+            botMessage.innerHTML = `<p>${data.response}</p>`;
+            chatbox.appendChild(botMessage);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</head>
+<body>
+    <div id="chatbox">
+        {% for message in messages %}
+            <div class="message {{ message.sender }}">
+                <p>{{ message.text }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form onsubmit="sendMessage(event)">
+        <input type="text" name="message" placeholder="Type your message..." required>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
