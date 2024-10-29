@@ -1,10 +1,19 @@
 import openai
 import pandas as pd
+from sqlalchemy import create_engine, Table, Column, Integer, MetaData, insert
+from sqlalchemy.orm import sessionmaker
 
 # Set OpenAI API key (Make sure you securely load your API key)
-openai.api_key = "enter_your_openai_key"
+openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_tQ92CrfVFHGIviQ5LR8GBAOt4SSxXlWrYA"
 # Load the dataset
 jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
+
+# connect to psql database
+DATABASE_URL = "postgresql+psycopg2://postgres:iui@localhost:5432/iui_project"
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
+session = Session()
+metadata = MetaData()
 
 # Function to normalize user input using GPT-3.5-turbo
 def normalize_input(input_text, field_type):
@@ -82,7 +91,7 @@ def filter_jobs(preferred_title, preferred_location, contract_type, remote_work_
             (jobs['types'].str.contains(contract_type, case=False, na=False))
         ]
     
-    return filtered_jobs[['title', 'company', 'location', 'types', 'remote_work_model']]
+    return filtered_jobs[['title', 'company', 'location', 'types', 'remote_work_model','source_id']]
 
 # Chat with the Seeker using GPT-3.5-turbo
 def chat_with_Seeker(prompt):
@@ -118,6 +127,7 @@ def job_chatbot():
             visa_sponsorship = input("\nJobSeeker:  Do you need visa sponsorship (Yes/No)? \nYou:        ")
             visa_sponsorship = normalize_visa_sponsorship(visa_sponsorship)
             print(f"            Normalized sponsorship: {visa_sponsorship}")
+        
 
             # Filter jobs based on normalized inputs
             recommendations = filter_jobs(preferred_title, preferred_location, contract_type, remote_work_model, visa_sponsorship)
@@ -134,7 +144,7 @@ def job_chatbot():
                     
                     # Display the batch of results
                     for _, row in next_batch.iterrows():
-                        print(f"Title: {row['title']}\nCompany: {row['company']}\nLocation: {row['location']}\n"
+                        print(f"Job ID:{row['source_id']}\nTitle: {row['title']}\nCompany: {row['company']}\nLocation: {row['location']}\n"
                               f"Type: {row['types']}\nRemote Work: {row['remote_work_model']}\n")
                     
                     # Update the index for the next batch
