@@ -84,6 +84,12 @@ def filter_jobs(preferred_title, preferred_location, contract_type, remote_work_
     
     return filtered_jobs[['title', 'company', 'location', 'types', 'remote_work_model']]
 
+# Return recommendations as a list of dictionaries
+def get_job_recommendations(preferred_title, preferred_location, contract_type, remote_work_model, visa_sponsorship):
+    recommendations = filter_jobs(preferred_title, preferred_location, contract_type, remote_work_model, visa_sponsorship)
+    # Return recommendations as a list of dictionaries for easy JSON serialization
+    return recommendations.to_dict(orient="records")
+
 # Chat with the Seeker using GPT-3.5-turbo
 def chat_with_Seeker(prompt):
     response = openai.ChatCompletion.create(

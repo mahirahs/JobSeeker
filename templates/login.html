@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>JobSeeker/Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
+        .mySlides {display:none}
+        .w3-tag, .fa {cursor:pointer}
+        .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
+                /* Container for login section */
+                .login-container {
+            display: flex;
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .login-info {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .login-info img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 20px;
+        }
+
+        .login-info h1 {
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .login-info p {
+            color: #6c757d;
+        }
+
+        .login-form {
+            flex: 1;
+            padding: 20px;
+            border-left: 1px solid #e6e6e6;
+        }
+
+        .login-form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-form label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .login-form .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .login-form input[type="email"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        /* Icons inside input fields */
+        .login-form .input-group i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+
+        /* Login button */
+        .login-form button {
+            padding: 12px;
+            border: none;
+            background-color: #1b1b1b;
+            color: white;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-form button span {
+            margin-left: 5px;
+            color: #00bfff; /* Arrow color */
+        }
+
+        /* Forgot password link */
+        .login-form .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .login-form .forgot-password a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        /* Divider and sign up link */
+        .login-form .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .login-form .divider::before,
+        .login-form .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        /* .login-form .divider span {
+            margin: 0 10px;
+            color: #6c757d;
+            font-size: 0.9em;
+        } */
+
+        .login-form .signup {
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .login-form .signup a {
+            color: #00bfff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Links (sit on top) -->
+    <div class="w3-top">
+        <div class="w3-row w3-large w3-light-grey">
+        <div class="w3-col s3">
+            <a href="index.html" class="w3-button w3-block">Home</a>
+        </div>
+        <div class="w3-col s3">
+            <a href="jobs.html" class="w3-button w3-block">Find Jobs</a>
+        </div>
+        </div>
+    </div>
+
+    <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+        
+        <div class="login-info">
+            <h1>Log in</h1>
+        </div>
+        <div class="login-form">
+            <form action="/login" method="POST">
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+                <div class="input-group">
+                    <i>📧</i> 
+                    <input type="email" placeholder="Email address" required>
+                </div>
+                <div class="input-group">
+                    <i>🔒</i> 
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <button type="submit">LOG IN <span>➔</span></button>
+            </form>
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            <div class="signup">
+                No account yet? <a href="#">Sign up!</a>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
