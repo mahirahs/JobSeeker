@@ -1,34 +1,48 @@
-from flask import Flask, render_template, request, jsonify
-from MainFile import get_job_recommendations, chat_with_Seeker
+from flask import Flask, request, render_template, session, jsonify
+import openai
+import pandas as pd
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from MainFile import job_chatbot, normalize_input, normalize_location, normalize_remote_work, normalize_visa_sponsorship, filter_jobs, chat_with_Seeker
 
+# Initialize Flask app
 app = Flask(__name__)
+app.secret_key = "your_secret_key"
 
-# Open JobSeeker website interface
-@app.route("/")
-def index():
-    return render_template("index.html")
+# Set OpenAI API key
+openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_tQ92CrfVFHGIviQ5LR8GBAOt4SSxXlWrYA"
 
-# Handle job recommendations
-@app.route('/search_jobs', methods=['POST'])
-def search_jobs():
-    # Get user preferences from the form
-    preferences = request.json  # Expecting JSON data
-    recommendations = get_job_recommendations(
-        preferences.get('title'),
-        preferences.get('location'),
-        preferences.get('contract_type'),
-        preferences.get('remote_work'),
-        preferences.get('visa_sponsorship')
-    )
-    return jsonify({"jobs": recommendations})
+# Connect to the PostgreSQL database
+DATABASE_URL = "postgresql+psycopg2://postgres:iui@localhost:5432/iui_project"
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
+session_db = Session()
 
-# Handle chatbot responses
-@app.route('/chat', methods=['POST'])
+# Load job data
+jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
+
+# Initialize chatbot session and start with a welcome message
+@app.route("/", methods=["GET"])
 def chat():
-    user_message = request.json.get("message")
-    # Call the function from MainFile.py to get the chatbot response
-    bot_response = chat_with_Seeker(user_message)
-    return jsonify({"response": bot_response})
+    # Initialize messages session if it doesn't exist
+    if 'messages' not in session:
+        session['messages'] = []
+        # Start chatbot and add the initial message
+        welcome_message = "Hello! I am JobSeeker, here to help you find job recommendations."
+        session['messages'].append({"sender": "bot", "text": welcome_message})
+
+    return render_template("chatbot.html", messages=session['messages'])
+
+@app.route("/get_response", methods=["POST"])
+def get_response():
+    user_input = request.json.get("message")
+    session['messages'].append({"sender": "user", "text": user_input})
+
+    # Get bot response based on user input
+    response_text = chat_with_Seeker(user_input)
+    session['messages'].append({"sender": "bot", "text": response_text})
+
+    return jsonify({"response": response_text})
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -122,3 +122,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 Contact
 
 For any questions or issues, feel free to reach out at [amalesh.unoffical@gmail.com, ].
+
+
+FOR POSTGRESQL/PGADMIN:
+
+pip install sqlalchemy psycopg2
+
+replace DATABASE_URL = "postgresql+psycopg2://<pgadmin username>:<password>@localhost:5432/<project name in pgadmin>"
