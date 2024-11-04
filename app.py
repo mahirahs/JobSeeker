@@ -23,6 +23,23 @@ session_db = Session()
 # Load job data
 jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/profile.html')
+def profile():
+    return render_template('profile.html')
+
+@app.route('/login.html')
+def login():
+    return render_template('login.html')
+
+@app.route('/jobs.html')
+def jobs():
+    return render_template('jobs.html')
+
+
 
 def normalize_input(input_text, input_type):
     # Mock normalization function
@@ -79,10 +96,11 @@ def chat_with_Seeker(prompt):
 
 
 
-@app.route('/')
-def index():
+@app.route('/chatbot.html')
+def chatbot():
     session.clear()  # Clear session for a new conversation
     return render_template('chatbot.html')
+
 
 @app.route('/chat', methods=['POST'])
 def chat():
