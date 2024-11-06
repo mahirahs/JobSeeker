@@ -37,12 +37,15 @@ class User(db.Model):
 # Load job data
 jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
 
-
-
-
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', logged_in='user_id' in session)
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('email', None)
+    return redirect(url_for('login'))
 
 @app.route('/profile.html')
 def profile():
@@ -298,6 +301,12 @@ def login():
             flash('Incorrect email/password')
  
     return render_template('login.html')
+
+
+@app.route('/home')
+def home():
+    # Logic for the home page
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
