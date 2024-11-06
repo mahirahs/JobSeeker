@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, session, jsonify, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import openai
 import re
@@ -48,9 +48,6 @@ def index():
 def profile():
     return render_template('profile.html')
 
-@app.route('/login.html')
-def login():
-    return render_template('login.html')
 
 @app.route('/jobs.html')
 def jobs():
@@ -266,6 +263,41 @@ def register():
     
     # Show the registration form
     return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+   
+    # Check if "email" and "password" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+        email = request.form['email']
+        password = request.form['password']
+        print(password)
+ 
+        # Check if account exists using PostgreSQL
+        cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+        # Fetch one record and return result
+        account = cursor.fetchone()
+ 
+        if account:
+            password_rs = account['password']
+            print(password_rs)
+            # If account exists in the users table in our database
+            if check_password_hash(password_rs, password):
+                # Create session data; we can access this data in other routes
+                session['loggedin'] = True
+                session['user_id'] = account['user_id']
+                session['email'] = account['email']
+                # Redirect to the home page
+                return redirect(url_for('home'))
+            else:
+                # Account doesn't exist or email/password incorrect
+                flash('Incorrect email/password')
+        else:
+            # Account doesn't exist or email/password incorrect
+            flash('Incorrect email/password')
+ 
+    return render_template('login.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
