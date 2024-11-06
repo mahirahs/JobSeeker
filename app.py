@@ -1,8 +1,10 @@
-from flask import Flask, request, render_template, session, jsonify
+from flask import Flask, request, render_template, session, jsonify, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+import psycopg2
 import openai
+import re
 import pandas as pd
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from MainFile import job_chatbot, normalize_input, normalize_location, normalize_remote_work, normalize_visa_sponsorship, filter_jobs, chat_with_Seeker
 from flask_session import Session
 # Initialize Flask app
@@ -15,13 +17,28 @@ Session(app)
 openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_tQ92CrfVFHGIviQ5LR8GBAOt4SSxXlWrYA"
 
 # Connect to the PostgreSQL database
-DATABASE_URL = "postgresql+psycopg2://postgres:iui@localhost:5432/iui_project"
-engine = create_engine(DATABASE_URL)
-Session = sessionmaker(bind=engine)
-session_db = Session()
+DB_HOST = "localhost"
+DB_NAME = "iui_project"
+DB_USER = "postgres"
+DB_PASS = "iui"
+ 
+conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+'''
+class User(db.Model):
+    __tablename__ = 'users'
+    user_id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(50), nullable=False)
+    lastname = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(120), unique=False, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    
+'''
 
 # Load job data
 jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
+
+
+
 
 @app.route('/')
 def index():
@@ -213,6 +230,42 @@ def show_recommendations():
 
     return response
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+ 
+    if request.method == 'POST' and 'firstname' in request.form and 'lastname' in request.form and 'password' in request.form and 'email' in request.form:
+        # Retrieve form data
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        password = request.form['password']
+        email = request.form['email']
+        
+        # Hash the password
+        _hashed_password = generate_password_hash(password)
+ 
+        # Check if account with the same email already exists
+        cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+        account = cursor.fetchone()
+        
+        # Validate the form and display appropriate messages
+        if account:
+            flash('An account with this email already exists!')
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            flash('Invalid email address!')
+        elif not firstname or not lastname or not password or not email:
+            flash('Please fill out the form completely!')
+        else:
+            # Insert a new record, omitting user_id (PostgreSQL will auto-generate it)
+            cursor.execute("INSERT INTO users (firstname, lastname, password, email) VALUES (%s, %s, %s, %s)", (firstname, lastname, _hashed_password, email))
+            conn.commit()
+            flash('You have successfully registered!')
+            return redirect(url_for('login'))  # Redirect to the login page (assuming a login route exists)
+    elif request.method == 'POST':
+        flash('Please fill out the form completely!')
+    
+    # Show the registration form
+    return render_template('register.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
