@@ -47,11 +47,6 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('login'))
 
-@app.route('/profile.html')
-def profile():
-    return render_template('profile.html')
-
-
 @app.route('/jobs.html')
 def jobs():
     return render_template('jobs.html')
@@ -259,48 +254,51 @@ def register():
             # Insert a new record, omitting user_id (PostgreSQL will auto-generate it)
             cursor.execute("INSERT INTO users (firstname, lastname, password, email) VALUES (%s, %s, %s, %s)", (firstname, lastname, _hashed_password, email))
             conn.commit()
+            # Store user info in the session
+            session['user_id'] = cursor.lastrowid  # or use the ID if it's returned automatically
+            session['firstname'] = firstname
             flash('You have successfully registered!')
-            return redirect(url_for('login'))  # Redirect to the login page (assuming a login route exists)
+            return redirect(url_for('profile'))  # Redirect to the profile page
     elif request.method == 'POST':
         flash('Please fill out the form completely!')
     
-    # Show the registration form
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
    
-    # Check if "email" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
-        print(password)
  
-        # Check if account exists using PostgreSQL
+        # Check if account exists
         cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
-        # Fetch one record and return result
         account = cursor.fetchone()
  
         if account:
             password_rs = account['password']
-            print(password_rs)
-            # If account exists in the users table in our database
             if check_password_hash(password_rs, password):
-                # Create session data; we can access this data in other routes
-                session['loggedin'] = True
+                # Store user information in session
                 session['user_id'] = account['user_id']
+                session['firstname'] = account['firstname']
                 session['email'] = account['email']
-                # Redirect to the home page
-                return redirect(url_for('home'))
+                return redirect(url_for('profile'))
             else:
-                # Account doesn't exist or email/password incorrect
                 flash('Incorrect email/password')
         else:
-            # Account doesn't exist or email/password incorrect
             flash('Incorrect email/password')
  
     return render_template('login.html')
+
+@app.route('/profile')
+def profile():
+    if 'firstname' in session:
+        name = session['firstname']
+        return render_template('profile.html', name=name)
+    else:
+        flash('Please log in to access your profile.')
+        return redirect(url_for('login'))
 
 
 @app.route('/home')
