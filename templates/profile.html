@@ -19,14 +19,39 @@
         .profile-container h1 {
             color: #333;
         }
+        .button-container {
+            margin-top: 20px;
+        }
+        .profile-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-size: 1em;
+        }
+        .btn-chatbot {
+            background-color: #007bff;
+        }
+        .btn-find-jobs {
+            background-color: #000;
+        }
+        .btn-home {
+            background-color: #888;
+        }
     </style>
 </head>
 <body>
     <div class="profile-container">
         <h1>Hello {{ name }}! Welcome to JobSeeker</h1>
         <p>We’re excited to help you find your dream job.</p>
-        <a href="{{ url_for('jobs') }}" class="w3-button w3-black">Find Jobs</a>
-        <a href="{{ url_for('home') }}" class="w3-button w3-gray">Home</a>
+        
+        <div class="button-container">
+            <a href="{{ url_for('chatbot') }}" class="profile-button btn-chatbot">Talk to Chatbot</a>
+            <a href="{{ url_for('jobs') }}" class="profile-button btn-find-jobs">Find Jobs</a>
+            <a href="{{ url_for('home') }}" class="profile-button btn-home">Home</a>
+        </div>
     </div>
 </body>
 </html>

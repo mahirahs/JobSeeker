@@ -35,7 +35,7 @@ class User(db.Model):
 '''
 
 # Load job data
-jobs = pd.read_csv("us-software-engineer-jobs-updated.csv")
+jobs_listings = pd.read_csv("us-software-engineer-jobs-updated.csv")
 
 @app.route('/')
 def index():
@@ -65,14 +65,15 @@ def filter_jobs(title, location, contract_type, remote_work, visa_sponsorship):
 # Filter jobs with relaxed criteria
 def filter_jobs(preferred_title, preferred_location, contract_type, remote_work_model, visa_sponsorship):
     # Initial filtering based on job title, location, contract type, and remote work model
-    filtered_jobs = jobs[
-        (jobs['title'].str.contains(preferred_title, case=False, na=False)) &
-        (jobs['location'].str.contains(preferred_location, case=False, na=False)) &
-        (jobs['types'].str.contains(contract_type, case=False, na=False))
+    print("jobs type: ", type(jobs_listings))
+    filtered_jobs = jobs_listings[
+        (jobs_listings['title'].str.contains(preferred_title, case=False, na=False)) &
+        (jobs_listings['location'].str.contains(preferred_location, case=False, na=False)) &
+        (jobs_listings['types'].str.contains(contract_type, case=False, na=False))
     ]
     # Apply remote work filter only if it is not "Not specified"
     if remote_work_model != "Not specified":
-        filtered_jobs = filtered_jobs[filtered_jobs['remote_work_model'].str.contains(remote_work_model, case=False, na=False)]
+        filtered_jobs = filtered_jobs[filtered_jobs['remote_work_model'].str.contains(remote_work_model, case=False, na=False)]  # Filter by remote work model
     
     # Apply visa sponsorship filter if the user says "Yes" or "No"
     if visa_sponsorship.lower() == "yes":
@@ -83,14 +84,13 @@ def filter_jobs(preferred_title, preferred_location, contract_type, remote_work_
     # If no matches are found, relax the visa sponsorship requirement
     if filtered_jobs.empty:
         print("\nJobSeeker: No exact matches found, ignoring visa sponsorship requirement... ")
-        filtered_jobs = jobs[
-            (jobs['title'].str.contains(preferred_title, case=False, na=False)) &
-            (jobs['location'].str.contains(preferred_location, case=False, na=False)) &
-            (jobs['types'].str.contains(contract_type, case=False, na=False))
+        filtered_jobs = jobs_listings[
+            (jobs_listings['title'].str.contains(preferred_title, case=False, na=False)) &
+            (jobs_listings['location'].str.contains(preferred_location, case=False, na=False)) &
+            (jobs_listings['types'].str.contains(contract_type, case=False, na=False))
         ]
-
-    # Convert the filtered DataFrame to a list of dictionaries for compatibility
-    return filtered_jobs[['title', 'company', 'location', 'types', 'remote_work_model', 'source_id']].to_dict(orient='records')
+    
+    return filtered_jobs[['title', 'company', 'location', 'types', 'remote_work_model','source_id']].to_dict(orient='records')
 
 # Return recommendations as a list of dictionaries
 def get_job_recommendations(preferred_title, preferred_location, contract_type, remote_work_model, visa_sponsorship):
@@ -189,20 +189,13 @@ def show_recommendations():
     remote_work = session.get('remote_work_model')
     visa_sponsorship = session.get('visa_sponsorship')
 
-    # Filter jobs based on user input (replace this with actual job data filtering)
-    '''
+    # Call the renamed function `filter_job_listings`
     recommendations = filter_jobs(title, location, contract_type, remote_work, visa_sponsorship)
-
+    
+    print("Recommendations type:", type(recommendations))
     if recommendations:
-        jobs = "\n".join([f"Job ID: {job['source_id']}, Title: {job['title']}, Location: {job['location']}" for job in recommendations])
-        return f"Here are some job recommendations for you:\n{jobs}\nDo you want to search for more jobs? (yes or no)"
-    else:
-        return "Sorry, no job recommendations match your criteria. Do you want to try another search? (yes or no)"
-    '''
-    
-    
-    recommendations = filter_jobs(title, location, contract_type, remote_work, visa_sponsorship)
-            
+        print("First item in recommendations:", recommendations[0])
+        
     if 'batch_index' not in session:
         session['batch_index'] = 0
 
@@ -224,6 +217,7 @@ def show_recommendations():
     }
 
     return response
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
