@@ -36,7 +36,7 @@
         <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
         <button onclick="sendMessage()">Send</button>
     </div>
-
+    <!--
     <script>
         document.getElementById("userInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
@@ -97,6 +97,73 @@
             }
         }
     </script>
+    -->
+    <script>
+        document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();  // Call the sendMessage function when Enter is pressed
+            }
+        });
+    
+        function sendMessage() {
+            const userMessage = document.getElementById('userInput').value;
+            if (userMessage.trim() === "") return; // Prevent sending empty messages
+            displayMessage(userMessage, 'user');
+            document.getElementById('userInput').value = '';
+        
+            fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: userMessage})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.jobs) {
+                    displayJobRecommendations(data.jobs, data.remaining);
+                } else {
+                    displayMessage(data.response, 'bot');
+                }
+            });
+        }
+        
+        function displayMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
+            messageDiv.textContent = message;
+            document.getElementById('chatbox').appendChild(messageDiv);
+        }
+        
+        function displayJobRecommendations(jobs, remaining) {
+            console.log("Jobs received from server:", jobs);  // Debugging line to verify data structure
+        
+            const chatbox = document.getElementById('chatbox');
+            
+            jobs.forEach(job => {
+                const jobDiv = document.createElement('div');
+                jobDiv.classList.add('message', 'bot-message');
+                jobDiv.innerHTML = `
+                    <strong>Job ID:</strong> ${job.source_id} <br>
+                    <strong>Title:</strong> ${job.title} <br>
+                    <strong>Company:</strong> ${job.company} <br>
+                    <strong>Location:</strong> ${job.location} <br>
+                    <strong>Type:</strong> ${job.types} <br>
+                    <strong>Remote Work:</strong> ${job.remote_work_model} <br>
+                `;
+                chatbox.appendChild(jobDiv);
+            });
+        
+            if (remaining > 0) {
+                const moreDiv = document.createElement('div');
+                moreDiv.classList.add('message', 'bot-message');
+                moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
+                chatbox.appendChild(moreDiv);
+            }
+        }
+        
+    </script>
+    
+    
     
 </body>
 </html>
