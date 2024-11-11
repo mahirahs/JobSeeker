@@ -193,7 +193,7 @@
             <div class="w3-row w3-large w3-light-grey">
                 {% if logged_in %}
                     <div class="w3-col s3">
-                        <a href="jobs.html" class="w3-button w3-block">Find Jobs</a>
+                        <a href="{{ url_for('jobs') }}" class="w3-button w3-block">Find Jobs</a>
                     </div>
                     <div class="w3-col s3">
                         <a href="{{ url_for('profile') }}" class="w3-button w3-block">Profile</a>

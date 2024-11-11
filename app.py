@@ -47,9 +47,34 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('login'))
 
+@app.route('/jobs')
 @app.route('/jobs.html')
 def jobs():
-    return render_template('jobs.html')
+    # Check if user is logged in
+    if 'user_id' not in session:
+        flash("Please log in to view your jobs.")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    cursor = conn.cursor()
+
+    # Query to retrieve jobs for the logged-in user
+    cursor.execute(
+        """
+        SELECT title, company_name, location, type, remote
+        FROM jobs
+        WHERE user_id = %s
+        """,
+        (user_id,)
+    )
+    
+    # Fetch all jobs associated with the user
+    jobs = cursor.fetchall()
+    cursor.close()
+
+    # Pass job data to the template
+    return render_template('jobs.html', jobs=jobs)
+
 
 
 
