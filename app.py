@@ -198,8 +198,7 @@ def chatbot_logic(user_input):
 
     return "I'm not sure how to respond to that."
 
-
-'''
+    
 def show_recommendations():
     # Retrieve user preferences from session
     title = session.get('preferred_title')
@@ -208,211 +207,62 @@ def show_recommendations():
     remote_work = session.get('remote_work_model')
     visa_sponsorship = session.get('visa_sponsorship')
 
-    # Call the renamed function `filter_job_listings`
+    # Get recommendations from `filter_jobs`
     recommendations = filter_jobs(title, location, contract_type, remote_work, visa_sponsorship)
-        
-    if 'batch_index' not in session:
-        session['batch_index'] = 0
+    #print("Recommendations received:", recommendations)  # Debug: Print recommendations
 
-    batch_size = 5
-    total_jobs = len(recommendations)
-    batch_index = session['batch_index']
-    
-    # Get the current batch of jobs
-    next_batch = recommendations[batch_index:batch_index + batch_size]
-    session['batch_index'] += batch_size  # Update index for the next call
-
-    # Format response as a list of job descriptions
-    jobs = [f"Job ID: {job['source_id']}, Title: {job['title']}, Company: {job['company']}, Location: {job['location']}, "
-            f"Type: {job['types']}, Remote Work: {job['remote_work_model']}" for job in next_batch]
-    
-    response = {
-        'jobs': jobs,
-        'remaining': max(0, total_jobs - session['batch_index'])
-    }
-    
-    print(response)
-
-    return response
-'''
-'''
-def show_recommendations():
-    # Retrieve user preferences from session
-    title = session.get('preferred_title')
-    location = session.get('preferred_location')
-    contract_type = session.get('contract_type')
-    remote_work = session.get('remote_work_model')
-    visa_sponsorship = session.get('visa_sponsorship')
-
-    # Call the filter_jobs function
-    recommendations = filter_jobs(title, location, contract_type, remote_work, visa_sponsorship)
-    
-    # Ensure batch index is tracked
-    if 'batch_index' not in session:
-        session['batch_index'] = 0
-
-    batch_size = 5
-    total_jobs = len(recommendations)
-    batch_index = session['batch_index']
-    
-    # Get the current batch of jobs
-    next_batch = recommendations[batch_index:batch_index + batch_size]
-    session['batch_index'] += batch_size  # Update index for the next call
-
-    # Prepare response as a list of dictionaries directly
-    response = {
-        'jobs': next_batch,
-        'remaining': max(0, total_jobs - session['batch_index'])
-    }
-    
-    print("Response sent to client:", response)  # Debugging line to confirm structure
-    return response
-
-
-def show_recommendations():
-    # Retrieve user preferences from session
-    title = session.get('preferred_title')
-    location = session.get('preferred_location')
-    contract_type = session.get('contract_type')
-    remote_work = session.get('remote_work_model')
-    visa_sponsorship = session.get('visa_sponsorship')
-
-    # Call the filter_jobs function
-    recommendations = filter_jobs(title, location, contract_type, remote_work, visa_sponsorship)
-    
-    # Ensure batch index is tracked
-    if 'batch_index' not in session:
-        session['batch_index'] = 0
-
-    batch_size = 5
-    total_jobs = len(recommendations)
-    batch_index = session['batch_index']
-    
-    # Get the current batch of jobs
-    next_batch = recommendations[batch_index:batch_index + batch_size]
-    session['batch_index'] += batch_size  # Update index for the next call
-
-    # Store each recommendation in the job_recommendations table
-    cursor = conn.cursor()
-    user_id = session.get('user_id')  # get the user ID from the session
-    
-    for job in next_batch:
-        cursor.execute("""
-            INSERT INTO jobs (job_id, user_id, title, company_name, location, type, remote)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT DO NOTHING  -- To avoid duplicate entries
-        """, (
-            job['source_id'],     # job_id
-            user_id,              # user_id from session
-            job['title'],         # title
-            job['company'],       # company_name
-            job['location'],      # location
-            job['types'],         # type
-            job['remote_work_model']  # remote
-        ))
-    conn.commit()  # Commit the transaction
-
-    # Prepare response as a list of dictionaries directly
-    response = {
-        'jobs': next_batch,
-        'remaining': max(0, total_jobs - session['batch_index'])
-    }
-    
-    print("Response sent to client:", response)  # Debugging line to confirm structure
-    return response
-'''
-
-def show_recommendations():
-    # Retrieve user preferences from session
-    title = session.get('preferred_title')
-    location = session.get('preferred_location')
-    contract_type = session.get('contract_type')
-    remote_work = session.get('remote_work_model')
-    visa_sponsorship = session.get('visa_sponsorship')
-
-    # Call the filter_jobs function to get recommendations
-    recommendations = filter_jobs(title, location, contract_type, remote_work, visa_sponsorship)
-    
-    
-    # Check if email is in session
+    # Check email presence in session and retrieve user_id from database
     email = session.get('email')
+    print("Email from session:", email)  # Debug: Print email
 
-    # Print email for debugging
-    print("Email from session:", email)
-
-    # Proceed with the rest of the function
-    cursor = conn.cursor()
-    cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
-    user_id = cursor.fetchone()
-
-    if user_id:
-        user_id = user_id[0]  # Extract user_id from the tuple
-        print("User ID:", user_id)
-    else:
-        print("Error: user_id not found for email:", email)
+    
+# Retrieve user_id from session
+    user_id = session.get('user_id')
+    if not user_id:
         flash("Could not store recommendations. User ID not found.")
-        return redirect(url_for('profile'))  # Redirect to profile if user ID is missing
-    
-    
-    # Ensure batch index is tracked
-    if 'batch_index' not in session:
-        session['batch_index'] = 0
+        return {"error": "User ID not found, please try again."}
 
-    batch_size = 5
-    total_jobs = len(recommendations)
-    batch_index = session['batch_index']
-    
-    # Get the current batch of jobs
-    next_batch = recommendations[batch_index:batch_index + batch_size]
-    session['batch_index'] += batch_size  # Update index for the next call
-    # Prepare response as a list of dictionaries directly
-    response = {
-        'jobs': next_batch,
-        'remaining': max(0, total_jobs - session['batch_index'])
-    }
-    
-    print("Response sent to client:", response)  # Debugging line to confirm structure
-
-    # Retrieve the user_id using the email stored in the session
     cursor = conn.cursor()
-    email = session.get('email')
-    cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
-    user_id = cursor.fetchone()
-    print("user id 1: ", user_id)
 
-    # Ensure that user_id is retrieved correctly
-    if user_id:
-        user_id = user_id[0]  # Extract user_id from the tuple
-        print("user id: ", user_id)
-
-        # Store each recommendation in the job_recommendations table
-        for job in next_batch:
-            cursor.execute("""
+    # Insert each job into the jobs table
+    for job in recommendations[:5]:
+        try:
+            cursor.execute(
+                """
                 INSERT INTO jobs (job_id, user_id, title, company_name, location, type, remote)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT DO NOTHING  -- To avoid duplicate entries
-            """, (
-                job['source_id'],     # job_id
-                user_id,              # Retrieved user_id
-                job['title'],         # title
-                job['company'],       # company_name
-                job['location'],      # location
-                job['types'],         # type
-                job['remote_work_model']  # remote
-            ))
-        conn.commit()  # Commit the transaction
-    else:
-        print("Error: user_id not found for email:", email)
-        flash("Could not store recommendations. User ID not found.")
+                ON CONFLICT (job_id, user_id) DO NOTHING
+                """,
+                (job['source_id'], user_id, job['title'], job['company'], job['location'], job['types'], job['remote_work_model'])
+            )
+        except Exception as e:
+            print(f"Error inserting job {job['source_id']}: {e}")
+    
+    # Commit the transaction to save changes
+    conn.commit()
+    cursor.close()
+    # Ensure batch index is tracked
+    if 'batch_index' not in session:
+        session['batch_index'] = 0
 
-    # Prepare response as a list of dictionaries directly
-    '''response = {
+    batch_size = 5
+    total_jobs = len(recommendations)
+    batch_index = session['batch_index']
+
+    # Get the current batch of jobs
+    next_batch = recommendations[batch_index:batch_index + batch_size]
+    session['batch_index'] += batch_size  # Update index for the next call
+
+    # Prepare response for the client
+    response = {
         'jobs': next_batch,
         'remaining': max(0, total_jobs - session['batch_index'])
-    }'''
+    }
     
-    #print("Response sent to client:", response)  # Debugging line to confirm structure
+    print("Response sent to client:", response)  # Debugging output
     return response
+
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -444,10 +294,12 @@ def register():
             # Insert a new record, omitting user_id (PostgreSQL will auto-generate it)
             cursor.execute("INSERT INTO users (firstname, lastname, password, email) VALUES (%s, %s, %s, %s)", (firstname, lastname, _hashed_password, email))
             conn.commit()
+            flash('You have successfully registered! Please log in.')
+            return redirect(url_for('login')) 
             # Store user info in the session
             session['user_id'] = cursor.lastrowid  # or use the ID if it's returned automatically
             session['firstname'] = firstname
-            flash('You have successfully registered!')
+            
             return redirect(url_for('profile'))  # Redirect to the profile page
     elif request.method == 'POST':
         flash('Please fill out the form completely!')
