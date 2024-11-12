@@ -40,49 +40,6 @@
             color: #00bfff; /* Light blue arrow color */
             font-size: 18px;
         }
-        .chatbot-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .chatbot-window {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 300px;
-            height: 400px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            display: none; /* Initially hidden */
-            flex-direction: column;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .chatbot-header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .chatbot-body {
-            padding: 10px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
     </style>
 </head>
 <body>   
@@ -93,13 +50,13 @@
             <a href="#" class="w3-button w3-block">Home</a>
         </div>
         <div class="w3-col s3">
-            <a href="jobs.html" class="w3-button w3-block">Find Jobs</a>
+            <a href="{{ url_for('jobs') }}" class="w3-button w3-block">Find Jobs</a>
         </div>
         <div class="w3-col s3">
             <a href="#contact" class="w3-button w3-block">Contact</a>
         </div>
         <div class="w3-col s3">
-            <a href="login.html" class="w3-button w3-block">Login</a>
+            <a href="{{ url_for('login') }}" class="w3-button w3-block">Login</a>
         </div>
         </div>
     </div>
@@ -162,13 +119,13 @@
         <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
     </footer>
     
-    <!-- JavaScript for Chatbot -->
+    <!-- JavaScript for Chatbot
     <script>
         function toggleChatbot() {
             const chatbotWindow = document.getElementById("chatbotWindow");
             chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "flex" : "none";
         }
-    </script>
+    </script> -->
 
 </body>
 </html>
