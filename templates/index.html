@@ -16,8 +16,8 @@
             display: inline-flex;
             align-items: center;
             padding: 15px 30px;
-            background-color: #1b1b1b;
-            color: #ffffff;
+            background-color: #1b1b1b; /* Dark background color */
+            color: #ffffff; /* White text color */
             font-size: 16px;
             font-weight: 600;
             border: none;
@@ -29,15 +29,15 @@
         }
 
         .search-button:hover {
-            transform: scale(1.05);
+            transform: scale(1.05); /* Slightly enlarge button on hover */
         }
 
         .search-button span {
-            margin-right: 8px;
+            margin-right: 8px; /* Space between text and arrow */
         }
 
         .search-button .arrow {
-            color: #00bfff;
+            color: #00bfff; /* Light blue arrow color */
             font-size: 18px;
         }
         .chatbot-button {
@@ -65,7 +65,7 @@
             background-color: #fff;
             border: 1px solid #ddd;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            display: none;
+            display: none; /* Initially hidden */
             flex-direction: column;
             border-radius: 8px;
             overflow: hidden;
@@ -89,203 +89,28 @@
     <!-- Links (sit on top) -->
     <div class="w3-top">
         <div class="w3-row w3-large w3-light-grey">
-            <div class="w3-col s3">
-                <a href="jobs.html" class="w3-button w3-block">Find Jobs</a>
-            </div>
-            <div class="w3-col s3">
-                <a href="#contact" class="w3-button w3-block">Contact</a>
-            </div>
-            <div class="w3-col s3">
-                <a href="{{ url_for('login') }}" class="w3-button w3-block">Login</a>
-            </div>
+        <div class="w3-col s3">
+            <a href="#" class="w3-button w3-block">Home</a>
+        </div>
+        <div class="w3-col s3">
+            <a href="jobs.html" class="w3-button w3-block">Find Jobs</a>
+        </div>
+        <div class="w3-col s3">
+            <a href="#contact" class="w3-button w3-block">Contact</a>
+        </div>
+        <div class="w3-col s3">
+            <a href="login.html" class="w3-button w3-block">Login</a>
+        </div>
         </div>
     </div>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>JobSeeker</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <style>
-            html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
-            .mySlides {display:none}
-            .w3-tag, .fa {cursor:pointer}
-            .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
-            .search-button {
-                display: inline-flex;
-                align-items: center;
-                padding: 15px 30px;
-                background-color: #1b1b1b;
-                color: #ffffff;
-                font-size: 16px;
-                font-weight: 600;
-                border: none;
-                border-radius: 30px;
-                cursor: pointer;
-                text-decoration: none;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                transition: transform 0.2s;
-            }
-    
-            .search-button:hover {
-                transform: scale(1.05);
-            }
-    
-            .search-button span {
-                margin-right: 8px;
-            }
-    
-            .search-button .arrow {
-                color: #00bfff;
-                font-size: 18px;
-            }
-            .chatbot-button {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background-color: #007bff;
-                color: white;
-                border: none;
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .chatbot-window {
-                position: fixed;
-                bottom: 80px;
-                right: 20px;
-                width: 300px;
-                height: 400px;
-                background-color: #fff;
-                border: 1px solid #ddd;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-                display: none;
-                flex-direction: column;
-                border-radius: 8px;
-                overflow: hidden;
-            }
-            .chatbot-header {
-                background-color: #007bff;
-                color: white;
-                padding: 10px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .chatbot-body {
-                padding: 10px;
-                overflow-y: auto;
-                flex-grow: 1;
-            }
-        </style>
-    </head>
-    <body>   
-        <!-- Links (sit on top) -->
-        <div class="w3-top">
-            <div class="w3-row w3-large w3-light-grey">
-                {% if logged_in %}
-                    <div class="w3-col s3">
-                        <a href="{{ url_for('jobs') }}" class="w3-button w3-block">Find Jobs</a>
-                    </div>
-                    <div class="w3-col s3">
-                        <a href="{{ url_for('profile') }}" class="w3-button w3-block">Profile</a>
-                    </div>
-                    <div class="w3-col s3">
-                        <a href="{{ url_for('logout') }}" class="w3-button w3-block">Logout</a>
-                    </div>
-                {% else %}
-                    <div class="w3-col s3">
-                        <a href="{{ url_for('login') }}" class="w3-button w3-block">Login</a>
-                    </div>
-                {% endif %}
-                <div class="w3-col s3">
-                    <a href="#contact" class="w3-button w3-block">Contact</a>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Home -->
-        <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
-            <div class="w3-panel">
-                <h1><b>Welcome to JobSeeker</b></h1>
-                <h2>Your personalized intelligent job searching system.</h2>
-            </div>
-            {% if logged_in %}
-                <a href="jobs.html" class="search-button">
-                    <span>Search Jobs</span>
-                    <span class="arrow">➔</span>
-                </a>
-            {% else %}
-                <p>Please <a href="{{ url_for('login') }}">log in</a> to access job searches and other features.</p>
-            {% endif %}
-        </div>
-    
-        <!-- Contact -->
-        <div class="w3-center w3-padding-64" id="contact">
-            <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">Contact Us</span>
-        </div>
-    
-        <form class="w3-container" action="/action_page.php" target="_blank">
-            <div class="w3-section">
-                <label>Name</label>
-                <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" type="text" name="Name" required>
-            </div>
-            <div class="w3-section">
-                <label>Email</label>
-                <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" type="text" name="Email" required>
-            </div>
-            <div class="w3-section">
-                <label>Subject</label>
-                <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" name="Subject" required>
-            </div>
-            <div class="w3-section">
-                <label>Message</label>
-                <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" name="Message" required>
-            </div>
-            <button type="submit" class="w3-button w3-block w3-black">Send</button>
-        </form>
-    
-        <!-- Chatbot Button and Window -->
-        <button class="chatbot-button" onclick="toggleChatbot()">💬</button>
-        <div class="chatbot-window" id="chatbotWindow">
-            <div class="chatbot-header">
-                <span>Chat with us!</span>
-                <button onclick="toggleChatbot()" style="background: none; border: none; color: white; font-size: 18px;">✕</button>
-            </div>
-            <div class="chatbot-body">
-                <p>Welcome to JobSeeker! How can I assist you today?</p>
-            </div>
-        </div>
-    
-        <!-- Footer -->
-        <footer class="w3-container w3-padding-32 w3-light-grey w3-center">
-            <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
-        </footer>
-        
-        <!-- JavaScript for Chatbot -->
-        <script>
-            function toggleChatbot() {
-                const chatbotWindow = document.getElementById("chatbotWindow");
-                chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "flex" : "none";
-            }
-        </script>
-    
-    </body>
-    </html>
-    
+
     <!-- Home -->
     <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
         <div class="w3-panel">
             <h1><b>Welcome to JobSeeker</b></h1>
-            <h2>Your personalized intelligent job searching system.</h2>
+            <h2>Your personalized intellignet job searching system.</h2>
+            <!-- <p>JobSeeker is a Python-based job recommendation chatbot that helps users find suitable jobs by filtering job listings based on their preferences. </p> -->
+            <!-- <p>The chatbot uses OpenAI's GPT-3.5-turbo for natural language processing, allowing users to specify their job preferences, such as job title, location, contract type, remote work preferences, and visa sponsorship requirements.The chatbot interacts with users through a conversational flow, gathers job preferences, and provides job recommendations from a dataset of U.S. software engineering jobs.</p> -->
         </div>
         <a href="jobs.html" class="search-button">
             <span>Search Jobs</span>
@@ -300,35 +125,37 @@
 
     <form class="w3-container" action="/action_page.php" target="_blank">
         <div class="w3-section">
-            <label>Name</label>
-            <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" type="text" name="Name" required>
+        <label>Name</label>
+        <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" type="text" name="Name" required>
         </div>
         <div class="w3-section">
-            <label>Email</label>
-            <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" type="text" name="Email" required>
+        <label>Email</label>
+        <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" type="text" name="Email" required>
         </div>
         <div class="w3-section">
-            <label>Subject</label>
-            <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" name="Subject" required>
+        <label>Subject</label>
+        <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" name="Subject" required>
         </div>
         <div class="w3-section">
-            <label>Message</label>
-            <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" name="Message" required>
+        <label>Message</label>
+        <input class="w3-input w3-border w3-hover-border-black" style="width:100%;" name="Message" required>
         </div>
         <button type="submit" class="w3-button w3-block w3-black">Send</button>
     </form>
 
+
     <!-- Chatbot Button and Window -->
-    <button class="chatbot-button" onclick="toggleChatbot()">💬</button>
+    <!-- <button class="chatbot-button" onclick="toggleChatbot()">💬</button>
     <div class="chatbot-window" id="chatbotWindow">
         <div class="chatbot-header">
             <span>Chat with us!</span>
             <button onclick="toggleChatbot()" style="background: none; border: none; color: white; font-size: 18px;">✕</button>
         </div>
         <div class="chatbot-body">
-            <p>Welcome to JobSeeker! How can I assist you today?</p>
-        </div>
-    </div>
+            <p>Welcome to JobSeeker! How can I assist you today?</p> -->
+            <!-- Chat messages would be dynamically loaded here -->
+        <!-- </div>
+    </div> -->
 
     <!-- Footer -->
     <footer class="w3-container w3-padding-32 w3-light-grey w3-center">
