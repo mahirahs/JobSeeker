@@ -49,6 +49,18 @@ Setup and Installation
 
     Ensure the dataset (us-software-engineer-jobs-updated.csv) is in the same directory as the script.
 
+Setup PostgreSQL
+On Mac: 
+    
+    brew update
+    brew install postgresql
+    brew services start postgresql
+    psql postgres
+    CREATE DATABASE iui_project;
+    CREATE USER postgres WITH PASSWORD 'iui';
+    GRANT ALL PRIVILEGES ON DATABASE iui_project TO postgres;
+    \q
+
 How to Run
 
 To run the UI:
