@@ -12,10 +12,10 @@
         .mySlides {display:none}
         .w3-tag, .fa {cursor:pointer}
         .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
-        .search-button {
+        .button {
             display: inline-flex;
             align-items: center;
-            padding: 15px 30px;
+            padding: 8px 20px;
             background-color: #1b1b1b; /* Dark background color */
             color: #ffffff; /* White text color */
             font-size: 16px;
@@ -28,15 +28,15 @@
             transition: transform 0.2s;
         }
 
-        .search-button:hover {
+        .button:hover {
             transform: scale(1.05); /* Slightly enlarge button on hover */
         }
 
-        .search-button span {
+        .button span {
             margin-right: 8px; /* Space between text and arrow */
         }
 
-        .search-button .arrow {
+        .button .arrow {
             color: #00bfff; /* Light blue arrow color */
             font-size: 18px;
         }
@@ -44,7 +44,7 @@
 </head>
 <body>   
     <!-- Links (sit on top) -->
-    <div class="w3-top">
+    <!-- <div class="w3-top">
         <div class="w3-row w3-large w3-light-grey">
         <div class="w3-col s3">
             <a href="#" class="w3-button w3-block">Home</a>
@@ -59,20 +59,49 @@
             <a href="{{ url_for('login') }}" class="w3-button w3-block">Login</a>
         </div>
         </div>
-    </div>
+    </div> -->
+    <div class="w3-top">
+        <div class="w3-row w3-large w3-light-grey">
+            {% if logged_in %}
+                <div class="w3-col s3">
+                    <a href="{{ url_for('jobs') }}" class="w3-button w3-block">Find Jobs</a>
+                </div>
+                <div class="w3-col s3">
+                    <a href="{{ url_for('profile') }}" class="w3-button w3-block">Profile</a>
+                </div>
+                <div class="w3-col s3">
+                    <a href="{{ url_for('logout') }}" class="w3-button w3-block">Logout</a>
+                </div>
+            {% else %}
+                <div class="w3-col s3">
+                    <a href="{{ url_for('login') }}" class="w3-button w3-block">Login</a>
+                </div>
+            {% endif %}
+            <div class="w3-col s3">
+                <a href="#contact" class="w3-button w3-block">Contact</a>
+            </div>
+        </div>
+    </div>   
 
     <!-- Home -->
     <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
         <div class="w3-panel">
             <h1><b>Welcome to JobSeeker</b></h1>
             <h2>Your personalized intellignet job searching system.</h2>
-            <!-- <p>JobSeeker is a Python-based job recommendation chatbot that helps users find suitable jobs by filtering job listings based on their preferences. </p> -->
-            <!-- <p>The chatbot uses OpenAI's GPT-3.5-turbo for natural language processing, allowing users to specify their job preferences, such as job title, location, contract type, remote work preferences, and visa sponsorship requirements.The chatbot interacts with users through a conversational flow, gathers job preferences, and provides job recommendations from a dataset of U.S. software engineering jobs.</p> -->
         </div>
-        <a href="jobs.html" class="search-button">
+        <!-- <a href="jobs.html" class="search-button">
             <span>Search Jobs</span>
             <span class="arrow">➔</span>
-        </a>
+        </a> -->
+        {% if logged_in %}
+            <a href="jobs.html" class="button">
+                <span>Search Jobs</span>
+                <span class="arrow">➔</span>
+            </a>
+        {% else %}
+            <h3>Please <a href="{{ url_for('login') }}" class="button"><span>Login</span>
+                <span class="arrow">➔</span></a> to access job searches and other features.</h3>
+        {% endif %}
     </div>
 
     <!-- Contact -->
@@ -113,12 +142,7 @@
             <!-- Chat messages would be dynamically loaded here -->
         <!-- </div>
     </div> -->
-
-    <!-- Footer -->
-    <footer class="w3-container w3-padding-32 w3-light-grey w3-center">
-        <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
-    </footer>
-    
+ 
     <!-- JavaScript for Chatbot
     <script>
         function toggleChatbot() {
@@ -126,6 +150,11 @@
             chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "flex" : "none";
         }
     </script> -->
+
+    <!-- Footer -->
+    <footer class="w3-container w3-padding-32 w3-light-grey w3-center">
+        <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
+    </footer>
 
 </body>
 </html>
