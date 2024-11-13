@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>JobSeeker Chatbot</title>
@@ -37,68 +37,7 @@
         <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
         <button onclick="sendMessage()">Send</button>
     </div>
-    <!--
-    <script>
-        document.getElementById("userInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                sendMessage();  // Call the sendMessage function when Enter is pressed
-            }
-        });
-        function sendMessage() {
-            const userMessage = document.getElementById('userInput').value;
-            if (userMessage.trim() === "") return; // Prevent sending empty messages
-            displayMessage(userMessage, 'user');
-            document.getElementById('userInput').value = '';
-    
-            fetch('/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: userMessage})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.jobs) {
-                    displayJobRecommendations(data.jobs, data.remaining);
-                } else {
-                    displayMessage(data.response, 'bot');
-                }
-            });
-        }
-    
-        function displayMessage(message, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
-            messageDiv.textContent = message;
-            document.getElementById('chatbox').appendChild(messageDiv);
-        }
-    
-        function displayJobRecommendations(jobs, remaining) {
-            const chatbox = document.getElementById('chatbox');
-            
-            jobs.forEach(job => {
-                const jobDiv = document.createElement('div');
-                jobDiv.classList.add('message', 'bot-message');
-                jobDiv.innerHTML = `
-                    <strong>Job ID:</strong> ${job.source_id} <br>
-                    <strong>Title:</strong> ${job.title} <br>
-                    <strong>Company:</strong> ${job.company} <br>
-                    <strong>Location:</strong> ${job.location} <br>
-                    <strong>Type:</strong> ${job.types} <br>
-                    <strong>Remote Work:</strong> ${job.remote_work_model} <br>
-                `;
-                chatbox.appendChild(jobDiv);
-            });
-    
-            if (remaining > 0) {
-                const moreDiv = document.createElement('div');
-                moreDiv.classList.add('message', 'bot-message');
-                moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
-                chatbox.appendChild(moreDiv);
-            }
-        }
-    </script>
-    -->
+
     <script>
         document.getElementById("userInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
@@ -163,11 +102,131 @@
         }
         
     </script>
-    
-    <!-- Footer -->
+
     <footer class="w3-container w3-padding-32 w3-light-grey w3-center">
         <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
     </footer>
     
+</body>
+</html>
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSeeker Chatbot</title>
+    <style>
+        .chat-container { /* styles remain unchanged */ }
+        .message { /* styles remain unchanged */ }
+        .bot-message { /* styles remain unchanged */ }
+        .user-message { /* styles remain unchanged */ }
+        .job-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        .thumbs-up, .thumbs-down {
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chatbox"></div>
+        <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const userMessage = document.getElementById('userInput').value;
+            if (userMessage.trim() === "") return;
+            displayMessage(userMessage, 'user');
+            document.getElementById('userInput').value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: userMessage})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.jobs) {
+                    displayJobRecommendations(data.jobs, data.remaining);
+                } else {
+                    displayMessage(data.response, 'bot');
+                }
+            });
+        }
+
+        function displayMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
+            messageDiv.textContent = message;
+            document.getElementById('chatbox').appendChild(messageDiv);
+        }
+
+        function displayJobRecommendations(jobs, remaining) {
+            const chatbox = document.getElementById('chatbox');
+
+            jobs.forEach(job => {
+                const jobDiv = document.createElement('div');
+                jobDiv.classList.add('message', 'bot-message', 'job-card');
+                jobDiv.innerHTML = `
+                    <strong>Job ID:</strong> ${job.source_id} <br>
+                    <strong>Title:</strong> ${job.title} <br>
+                    <strong>Company:</strong> ${job.company} <br>
+                    <strong>Location:</strong> ${job.location} <br>
+                    <strong>Type:</strong> ${job.types} <br>
+                    <strong>Remote Work:</strong> ${job.remote_work_model} <br>
+                    <span class="thumbs-up" onclick="handleThumbsUp(${job.source_id})">👍</span>
+                    <span class="thumbs-down" onclick="handleThumbsDown()">👎</span>
+                `;
+                chatbox.appendChild(jobDiv);
+            });
+
+            if (remaining > 0) {
+                const moreDiv = document.createElement('div');
+                moreDiv.classList.add('message', 'bot-message');
+                moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
+                chatbox.appendChild(moreDiv);
+            }
+        }
+
+        function handleThumbsUp(jobId) {
+            fetch('/save_job', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({job_id: jobId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Job saved successfully!');
+                } else {
+                    alert('Failed to save job.');
+                }
+            });
+        }
+
+        function handleThumbsDown() {
+            // No action needed for thumbs down
+        }
+    </script>
 </body>
 </html>

@@ -75,6 +75,37 @@ def jobs():
     # Pass job data to the template
     return render_template('jobs.html', jobs=jobs)
 
+@app.route('/save_job', methods=['POST'])
+def save_job():
+    data = request.json
+    job_id = data.get('job_id')
+    user_id = session.get('user_id')
+
+    # Check if job_id and user_id are valid
+    if not job_id or not user_id:
+        return jsonify({"status": "error", "message": "Invalid job ID or user session"}), 400
+
+    # Fetch job details from job listings
+    job = next((job for job in jobs_listings.to_dict(orient='records') if job['source_id'] == job_id), None)
+
+    if job:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO jobs (job_id, user_id, title, company_name, location, type, remote)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT DO NOTHING  -- Avoid duplicate entries
+            """, (
+                job['source_id'], user_id, job['title'], job['company'], job['location'],
+                job['types'], job['remote_work_model']
+            ))
+            conn.commit()
+            return jsonify({"status": "success"})
+        except Exception as e:
+            print("Error inserting job:", e)
+            return jsonify({"status": "error", "message": str(e)}), 500
+    else:
+        return jsonify({"status": "error", "message": "Job not found"}), 404
 
 
 
@@ -250,6 +281,7 @@ def show_recommendations():
     cursor = conn.cursor()
 
     # Insert each job into the jobs table
+    '''
     for job in recommendations[:5]:
         try:
             cursor.execute(
@@ -265,7 +297,7 @@ def show_recommendations():
     
     # Commit the transaction to save changes
     conn.commit()
-    cursor.close()
+    cursor.close()'''
     # Ensure batch index is tracked
     if 'batch_index' not in session:
         session['batch_index'] = 0
