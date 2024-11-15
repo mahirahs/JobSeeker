@@ -5,8 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        body, h1, h2, h3 { font-family: "Lato", sans-serif; }
+        html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
+        .mySlides {display:none}
+        .w3-tag, .fa {cursor:pointer}
+        .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
         .profile-container {
             max-width: 800px;
             margin: 40px auto;
@@ -43,15 +48,39 @@
     </style>
 </head>
 <body>
+     <!-- Links (sit on top) -->
+     <div class="w3-top">
+        <!-- <div class="w3-row w3-large w3-light-grey"> -->
+        <div class="w3-bar w3-light-grey w3-large" style="display: flex; justify-content: space-evenly;">
+            <div class="w3-col s3">
+                <a href="{{ url_for('home') }}" class="w3-button w3-block">Home</a>
+            </div>
+            <div class="w3-col s3">
+                <a href="#profile" class="w3-button w3-block">Profile</a>
+            </div>
+            <div class="w3-col s3">
+                <a href="#savedjobs" class="w3-button w3-block">Saved Jobs</a>
+            </div>
+            <div class="w3-col s3">
+                <a href="{{ url_for('chatbot') }}" class="w3-button w3-block">Chatbot</a>
+            </div>        
+            <div class="w3-col s3">
+                <a href="{{ url_for('home') }}" class="w3-button w3-block">Logout</a>
+            </div>
+        </div>
+    </div>
+
     <div class="profile-container">
         <h1>Hello {{ name }}! Welcome to JobSeeker</h1>
         <p>We're excited to help you find your dream job.</p>
-        
-        <div class="button-container">
-            <a href="{{ url_for('chatbot') }}" class="profile-button btn-chatbot">Talk to Chatbot</a>
-            <a href="{{ url_for('jobs') }}" class="profile-button btn-find-jobs">Find Jobs</a>
-            <a href="{{ url_for('home') }}" class="profile-button btn-home">Home</a>
-        </div>
+    </div>
+
+    <div class="w3-center w3-padding-64" id="profile">
+        <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">Profile</span>
+    </div>
+
+    <div class="w3-center w3-padding-64" id="savedjobs">
+        <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">Saved Jobs</span>
     </div>
 
     <!-- Footer -->
