@@ -44,27 +44,11 @@
 </head>
 <body>   
     <!-- Links (sit on top) -->
-    <!-- <div class="w3-top">
-        <div class="w3-row w3-large w3-light-grey">
-        <div class="w3-col s3">
-            <a href="#" class="w3-button w3-block">Home</a>
-        </div>
-        <div class="w3-col s3">
-            <a href="{{ url_for('jobs') }}" class="w3-button w3-block">Find Jobs</a>
-        </div>
-        <div class="w3-col s3">
-            <a href="#contact" class="w3-button w3-block">Contact</a>
-        </div>
-        <div class="w3-col s3">
-            <a href="{{ url_for('login') }}" class="w3-button w3-block">Login</a>
-        </div>
-        </div>
-    </div> -->
     <div class="w3-top">
         <div class="w3-row w3-large w3-light-grey">
             {% if logged_in %}
                 <div class="w3-col s3">
-                    <a href="{{ url_for('jobs') }}" class="w3-button w3-block">Find Jobs</a>
+                    <a href="{{ url_for('chatbot') }}" class="w3-button w3-block">Chatbot</a>
                 </div>
                 <div class="w3-col s3">
                     <a href="{{ url_for('profile') }}" class="w3-button w3-block">Profile</a>
@@ -88,20 +72,20 @@
         <div class="w3-panel">
             <h1><b>Welcome to JobSeeker</b></h1>
             <h2>Your personalized intellignet job searching system.</h2>
-        </div>
         <!-- <a href="jobs.html" class="search-button">
             <span>Search Jobs</span>
             <span class="arrow">➔</span>
         </a> -->
-        {% if logged_in %}
+            {% if logged_in %}
             <a href="jobs.html" class="button">
-                <span>Search Jobs</span>
+                <span>Talk to our Chatbot</span>
                 <span class="arrow">➔</span>
             </a>
-        {% else %}
+            {% else %}
             <h3>Please <a href="{{ url_for('login') }}" class="button"><span>Login</span>
-                <span class="arrow">➔</span></a> to access job searches and other features.</h3>
-        {% endif %}
+            <span class="arrow">➔</span></a> to access job searches and other features.</h3>
+            {% endif %}
+        </div>
     </div>
 
     <!-- Contact -->
@@ -128,28 +112,6 @@
         </div>
         <button type="submit" class="w3-button w3-block w3-black">Send</button>
     </form>
-
-
-    <!-- Chatbot Button and Window -->
-    <!-- <button class="chatbot-button" onclick="toggleChatbot()">💬</button>
-    <div class="chatbot-window" id="chatbotWindow">
-        <div class="chatbot-header">
-            <span>Chat with us!</span>
-            <button onclick="toggleChatbot()" style="background: none; border: none; color: white; font-size: 18px;">✕</button>
-        </div>
-        <div class="chatbot-body">
-            <p>Welcome to JobSeeker! How can I assist you today?</p> -->
-            <!-- Chat messages would be dynamically loaded here -->
-        <!-- </div>
-    </div> -->
- 
-    <!-- JavaScript for Chatbot
-    <script>
-        function toggleChatbot() {
-            const chatbotWindow = document.getElementById("chatbotWindow");
-            chatbotWindow.style.display = chatbotWindow.style.display === "none" ? "flex" : "none";
-        }
-    </script> -->
 
     <!-- Footer -->
     <footer class="w3-container w3-padding-32 w3-light-grey w3-center">

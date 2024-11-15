@@ -118,12 +118,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>JobSeeker Chatbot</title>
     <style>
-        .chat-container { /* styles remain unchanged */ }
-        .message { /* styles remain unchanged */ }
-        .bot-message { /* styles remain unchanged */ }
-        .user-message { /* styles remain unchanged */ }
+        /* html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
+        .mySlides {display:none}
+        .w3-tag, .fa {cursor:pointer}
+        .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
+        .chat-container {
+            width: 80%;
+            margin: auto;
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+        }
+        .message {
+            padding: 5px;
+            margin: 5px;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+            text-align: left;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #d1e7dd;
+            text-align: right;
+            border-radius: 5px;
+        }
         .job-card {
             border: 1px solid #ccc;
             padding: 10px;
@@ -135,17 +161,133 @@
             cursor: pointer;
             font-size: 1.2em;
             padding: 5px;
+        } */
+        html, body {font-family: "Lato", sans-serif; margin: 0; padding: 0; background-color: #f9f9f9;}
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+        }
+        .chat-box {
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .message {
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .bot-message {
+            background-color: #e6f7ff;
+            border-radius: 15px 15px 15px 0;
+            padding: 10px;
+            max-width: 70%;
+            display: inline-block;
+        }
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #0078d4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2em;
+        }
+        .user-message {
+            background-color: #d1e7dd;
+            border-radius: 15px 15px 0 15px;
+            padding: 10px;
+            max-width: 70%;
+            margin-left: auto;
+        }
+        .input-area {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        #userInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .job-card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .thumbs {
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div id="chatbox"></div>
-        <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
-        <button onclick="sendMessage()">Send</button>
+      <!-- Links (sit on top) -->
+    <div class="w3-top">
+        <div class="w3-row w3-large w3-light-grey">
+        <div class="w3-col s3">
+            <a href="{{ url_for('home') }}" class="w3-button w3-block">Home</a>
+        </div>
+        <div class="w3-col s3">
+            <a href="{{ url_for('profile') }}" class="w3-button w3-block">Profile</a>
+        </div>
+        </div>
     </div>
 
-    <script>
+    <!-- <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+        <div class="chat-container">
+            <div id="chatbox"></div>
+            <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px"> -->
+
+    <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+        <div class="chat-container">
+            <div class="chat-box" id="chatbox"></div>
+            <div class="input-area">
+                <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w3-container w3-padding-32 w3-light-grey w3-center">
+        <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
+    </footer>
+
+    <!-- <script>
         document.getElementById("userInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -154,15 +296,15 @@
         });
 
         function sendMessage() {
-            const userMessage = document.getElementById('userInput').value;
-            if (userMessage.trim() === "") return;
+            const userMessage = document.getElementById('userInput').value.trim();
+            if (!userMessage) return;
             displayMessage(userMessage, 'user');
             document.getElementById('userInput').value = '';
 
             fetch('/chat', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: userMessage})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
             })
             .then(response => response.json())
             .then(data => {
@@ -174,59 +316,204 @@
             });
         }
 
-        function displayMessage(message, sender) {
+        // function displayMessage(message, sender) {
+            const chatbox = document.getElementById('chatbox');
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
-            messageDiv.textContent = message;
-            document.getElementById('chatbox').appendChild(messageDiv);
+            messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
+
+            if (sender === 'bot') {
+                const avatar = document.createElement('div');
+                avatar.className = 'bot-avatar';
+                avatar.textContent = 'AI';
+                messageDiv.appendChild(avatar);
+            }
+
+            const text = document.createElement('div');
+            text.textContent = message;
+            messageDiv.appendChild(text);
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
         }
+
+        function displayMessage(message, sender, options = []) {
+            const chatbox = document.getElementById('chatbox');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
+
+            if (sender === 'bot') {
+                const avatar = document.createElement('div');
+                avatar.className = 'bot-avatar';
+                avatar.textContent = 'AI';
+                messageDiv.appendChild(avatar);
+            }
+
+            const text = document.createElement('div');
+            text.textContent = message;
+            messageDiv.appendChild(text);
+
+            // Display quick reply buttons if options are provided
+            if (options.length > 0) {
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'quick-reply';
+                    button.textContent = option;
+                    button.onclick = () => {
+                        displayMessage(option, 'user');
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                        sendMessage(option);  // Send the option as the user's message
+                    };
+                    messageDiv.appendChild(button);
+                });
+            }
+
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
 
         function displayJobRecommendations(jobs, remaining) {
             const chatbox = document.getElementById('chatbox');
 
             jobs.forEach(job => {
                 const jobDiv = document.createElement('div');
-                jobDiv.classList.add('message', 'bot-message', 'job-card');
+                jobDiv.className = 'job-card';
                 jobDiv.innerHTML = `
-                    <strong>Job ID:</strong> ${job.source_id} <br>
-                    <strong>Title:</strong> ${job.title} <br>
-                    <strong>Company:</strong> ${job.company} <br>
-                    <strong>Location:</strong> ${job.location} <br>
-                    <strong>Type:</strong> ${job.types} <br>
-                    <strong>Remote Work:</strong> ${job.remote_work_model} <br>
-                    <span class="thumbs-up" onclick="handleThumbsUp(${job.source_id})">👍</span>
-                    <span class="thumbs-down" onclick="handleThumbsDown()">👎</span>
+                    <strong>Job Title:</strong> ${job.title}<br>
+                    <strong>Company:</strong> ${job.company}<br>
+                    <strong>Location:</strong> ${job.location}<br>
+                    <div>
+                        <span class="thumbs" onclick="handleThumbsUp(${job.source_id})">👍</span>
+                        <span class="thumbs" onclick="handleThumbsDown()">👎</span>
+                    </div>
                 `;
                 chatbox.appendChild(jobDiv);
             });
 
             if (remaining > 0) {
-                const moreDiv = document.createElement('div');
-                moreDiv.classList.add('message', 'bot-message');
-                moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
-                chatbox.appendChild(moreDiv);
+                displayMessage(`Do you want to see more results? (${remaining} remaining)`, 'bot');
             }
         }
 
         function handleThumbsUp(jobId) {
-            fetch('/save_job', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({job_id: jobId})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Job saved successfully!');
-                } else {
-                    alert('Failed to save job.');
-                }
-            });
+            alert(`Saved job ID: ${jobId}`);
         }
 
         function handleThumbsDown() {
-            // No action needed for thumbs down
+            alert('Job disliked.');
+        }
+    </script> -->
+
+    <script>
+        document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    
+        function sendMessage(userMessage = null) {
+            const messageInput = document.getElementById('userInput');
+            const userMessageText = userMessage || messageInput.value.trim();
+            if (!userMessageText) return;
+    
+            displayMessage(userMessageText, 'user');
+            messageInput.value = '';
+    
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessageText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.jobs) {
+                    displayJobRecommendations(data.jobs, data.remaining);
+                } else {
+                    // Check if there are predefined options (e.g., Yes/No) in the response
+                    if (data.options) {
+                        displayMessage(data.response, 'bot', data.options);
+                    } else {
+                        displayMessage(data.response, 'bot');
+                    }
+                }
+            });
+        }
+    
+        function displayMessage(message, sender, options = []) {
+            const chatbox = document.getElementById('chatbox');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
+    
+            if (sender === 'bot') {
+                const avatar = document.createElement('div');
+                avatar.className = 'bot-avatar';
+                avatar.textContent = 'AI';
+                messageDiv.appendChild(avatar);
+            }
+    
+            const text = document.createElement('div');
+            text.textContent = message;
+            messageDiv.appendChild(text);
+    
+            // Display quick reply buttons if options are provided
+            if (options.length > 0) {
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.marginTop = '5px';
+    
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'quick-reply';
+                    button.textContent = option;
+                    button.onclick = () => {
+                        displayMessage(option, 'user');
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                        sendMessage(option);  // Send the option as the user's message
+                    };
+                    button.style.marginRight = '5px';
+                    buttonContainer.appendChild(button);
+                });
+    
+                messageDiv.appendChild(buttonContainer);
+            }
+    
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    
+        function displayJobRecommendations(jobs, remaining) {
+            const chatbox = document.getElementById('chatbox');
+    
+            jobs.forEach(job => {
+                const jobDiv = document.createElement('div');
+                jobDiv.className = 'job-card';
+                jobDiv.innerHTML = `
+                    <strong>Job Title:</strong> ${job.title}<br>
+                    <strong>Company:</strong> ${job.company}<br>
+                    <strong>Location:</strong> ${job.location}<br>
+                    <div>
+                        <span class="thumbs" onclick="handleThumbsUp(${job.source_id})">👍</span>
+                        <span class="thumbs" onclick="handleThumbsDown()">👎</span>
+                    </div>
+                `;
+                chatbox.appendChild(jobDiv);
+            });
+    
+            if (remaining > 0) {
+                displayMessage(`Do you want to see more results? (${remaining} remaining)`, 'bot', ['Yes', 'No']);
+            }
+        }
+    
+        function handleThumbsUp(jobId) {
+            alert(`Saved job ID: ${jobId}`);
+        }
+    
+        function handleThumbsDown() {
+            alert('Job disliked.');
         }
     </script>
+    
+    
+
 </body>
 </html>
