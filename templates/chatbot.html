@@ -133,7 +133,7 @@
         <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
     </footer>
 
-    <!-- <script>
+    <!--<script>
         document.getElementById("userInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -247,7 +247,7 @@
         function handleThumbsDown() {
             alert('Job disliked.');
         }
-    </script> -->
+    </script>-->
 
     <script>
         document.getElementById("userInput").addEventListener("keypress", function(event) {
@@ -345,13 +345,34 @@
                 chatbox.appendChild(jobDiv);
             });
     
+            // if (remaining > 0) {
+            //     displayMessage(`Do you want to see more results? (${remaining} remaining)`, 'bot', ['Yes', 'No']);
+            // }
             if (remaining > 0) {
-                displayMessage(`Do you want to see more results? (${remaining} remaining)`, 'bot', ['Yes', 'No']);
+                const moreDiv = document.createElement('div');
+                moreDiv.classList.add('message', 'bot-message');
+                moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
+                chatbox.appendChild(moreDiv);
             }
         }
     
+        // function handleThumbsUp(jobId) {
+        //     alert(`Saved job ID: ${jobId}`);
+        // }
         function handleThumbsUp(jobId) {
-            alert(`Saved job ID: ${jobId}`);
+            fetch('/save_job', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({job_id: jobId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Job saved successfully!');
+                } else {
+                    alert('Failed to save job.');
+                }
+            });
         }
     
         function handleThumbsDown() {
