@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
+    <!-- <style>
         html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
         .mySlides {display:none}
         .w3-tag, .fa {cursor:pointer}
@@ -44,6 +44,129 @@
         }
         .btn-home {
             background-color: #888;
+        }
+        /* Container for scrollable job list */
+        .job-container {
+            width: 80%;
+            max-width: 600px;
+            height: 400px; /* Fixed height for scrollable container */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        /* Styling for each job entry */
+        .job-entry {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Remove border for the last job entry */
+        .job-entry:last-child {
+            border-bottom: none;
+        }
+    </style> -->
+    <style>
+        html, body {
+            font-family: "Lato", sans-serif;
+            margin: 0;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mySlides {
+            display: none;
+        }
+
+        .w3-tag, .fa {
+            cursor: pointer;
+        }
+
+        .w3-tag {
+            height: 15px;
+            width: 15px;
+            padding: 0;
+            margin-top: 6px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-container h1 {
+            color: #333;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .profile-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-size: 1em;
+        }
+
+        .btn-chatbot {
+            background-color: #007bff;
+        }
+
+        .btn-find-jobs {
+            background-color: #000;
+        }
+
+        .btn-home {
+            background-color: #888;
+        }
+
+        /* Centering the Saved Jobs panel */
+        .saved-jobs-section {
+            flex: 1; /* Ensure this section takes the remaining space */
+            display: flex;
+            justify-content: center; /* Horizontal centering */
+            align-items: center; /* Vertical centering */
+        }
+
+        .job-container {
+            width: 80%;
+            max-width: 600px;
+            height: 400px; /* Fixed height for scrollable container */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .job-entry {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .job-entry:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
@@ -98,6 +221,23 @@
                         <p>No job recommendations found for your account.</p>
                     {% endif %}
                 </div>
+    
+    <div class="saved-jobs-section" id="savedjobs">
+        <div class="job-container">
+            <h1 style="text-align: center;"><b>Your Saved Jobs</b></h1>
+            {% if jobs %}
+                {% for job in jobs %}
+                    <div class="job-entry">
+                        <strong>Title:</strong> {{ job[0] }}<br>
+                        <strong>Company:</strong> {{ job[1] }}<br>
+                        <strong>Location:</strong> {{ job[2] }}<br>
+                        <strong>Type:</strong> {{ job[3] }}<br>
+                        <strong>Remote:</strong> {{ job[4] }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center;">No saved jobs found for your account.</p>
+            {% endif %}
         </div>
     </div>
 

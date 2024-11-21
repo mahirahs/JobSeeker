@@ -47,33 +47,34 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('login'))
 
-@app.route('/jobs')
-@app.route('/jobs.html')
-def jobs():
-    # Check if user is logged in
-    if 'user_id' not in session:
-        flash("Please log in to view your jobs.")
-        return redirect(url_for('login'))
+# Remove and display saved jobs in profile.html
+# @app.route('/jobs')
+# @app.route('/jobs.html')
+# def jobs():
+#     # Check if user is logged in
+#     if 'user_id' not in session:
+#         flash("Please log in to view your jobs.")
+#         return redirect(url_for('login'))
 
-    user_id = session['user_id']
-    cursor = conn.cursor()
+#     user_id = session['user_id']
+#     cursor = conn.cursor()
 
-    # Query to retrieve jobs for the logged-in user
-    cursor.execute(
-        """
-        SELECT title, company_name, location, type, remote
-        FROM jobs
-        WHERE user_id = %s
-        """,
-        (user_id,)
-    )
+#     # Query to retrieve jobs for the logged-in user
+#     cursor.execute(
+#         """
+#         SELECT title, company_name, location, type, remote
+#         FROM jobs
+#         WHERE user_id = %s
+#         """,
+#         (user_id,)
+#     )
     
-    # Fetch all jobs associated with the user
-    jobs = cursor.fetchall()
-    cursor.close()
+#     # Fetch all jobs associated with the user
+#     jobs = cursor.fetchall()
+#     cursor.close()
 
-    # Pass job data to the template
-    return render_template('jobs.html', jobs=jobs)
+#     # Pass job data to the template
+#     return render_template('jobs.html', jobs=jobs)
 
 @app.route('/save_job', methods=['POST'])
 def save_job():
@@ -470,6 +471,15 @@ def login():
     return render_template('login.html')
 
 
+# @app.route('/profile')
+# def profile():
+#     if 'firstname' in session:
+#         name = session['firstname']
+#         return render_template('profile.html', name=name)
+#     else:
+#         flash('Please log in to access your profile.')
+#         return redirect(url_for('login'))
+
 @app.route('/profile')
 def profile():
     '''
@@ -477,6 +487,7 @@ def profile():
         name = session['firstname']
         return render_template('profile.html', name=name)
     else:
+    if 'user_id' not in session:
         flash('Please log in to access your profile.')
         return redirect(url_for('login'))
     '''
@@ -509,6 +520,26 @@ def profile():
     else:
         flash('Please log in to access your profile.')
         return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    name = session.get('firstname', 'Guest')
+
+    # Fetch saved jobs for the logged-in user
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT title, company_name, location, type, remote
+        FROM jobs
+        WHERE user_id = %s
+        """,
+        (user_id,)
+    )
+    jobs = cursor.fetchall()
+    cursor.close()
+
+    # Pass saved jobs and user name to the profile template
+    return render_template('profile.html', name=name, jobs=jobs)
+
 
 
 @app.route('/home')
