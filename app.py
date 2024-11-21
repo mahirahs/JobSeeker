@@ -109,9 +109,55 @@ def save_job():
 
 
 
-def normalize_input(input_text, input_type):
-    # Mock normalization function
-    return input_text.lower()
+# Function to normalize user input using GPT-3.5-turbo
+def normalize_input(input_text, field_type):
+    prompt = f"JobSeeker: Normalize this input '{input_text}' to a valid {field_type}. Please return only the normalized value. "
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content.strip()
+
+# Normalize location specifically for 'Remote' or a valid city
+def normalize_location(input_text):
+    prompt = f"JobSeeker: Normalize this input '{input_text}' to either a valid city or 'Remote'. Please return only the normalized value. "
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content.strip()
+
+# Normalize remote work to match "100% Remote", "Hybrid", or "No Remote"
+def normalize_remote_work(input_text):
+    input_text = input_text.lower()
+    if "yes" in input_text:
+        return "100% Remote"
+    elif "work from home" in input_text or "wfh" in input_text or "maybe" in input_text:
+        return "Hybrid"
+    elif "no" in input_text:
+        return "No Remote"
+    else:
+        prompt = f"JobSeeker: Normalize this input '{input_text}' to one of these options: '100% Remote', 'Hybrid', or 'No Remote'. Please return only one of these exact values."
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        normalized_value = response.choices[0].message.content.strip()
+
+        # Treat any invalid value as "Not specified"
+        if normalized_value not in ['100% Remote', 'Hybrid', 'No Remote']:
+            return "Not specified"
+        return normalized_value
+
+# Normalize visa sponsorship specifically to either 'Yes' or 'No'
+def normalize_visa_sponsorship(input_text):
+    if "yes" in input_text.lower():
+        return "Yes"
+    elif "no" in input_text.lower():
+        return "No"
+    else:
+        return "Not specified"
+
 '''
 def filter_jobs(title, location, contract_type, remote_work, visa_sponsorship):
     # Mock job filtering function, returns sample job recommendations
@@ -201,7 +247,7 @@ def chatbot_logic(user_input):
     # Step-based conversation handling
     if session['step'] == 'start':
         session['step'] = 'detailed_search'
-        return "Do you want a detailed job search? (yes or no)"
+        return "Do you want a detailed job search? (Yes / No)"
 
     elif session['step'] == 'detailed_search':
         if user_input == 'yes':
@@ -209,30 +255,35 @@ def chatbot_logic(user_input):
             return "What is your preferred job title?"
         else:
             session['step'] = 'anything_else'
-            return "Anything else I can help you with? (yes or no)"
+            return "Anything else I can help you with? (Yes / No)"
 
     elif session['step'] == 'get_title':
         session['preferred_title'] = normalize_input(user_input, "job title")
+        print(f"Normalized Job Title: {session['preferred_title']}")  # Debug log
         session['step'] = 'get_location'
         return "Preferred job location (e.g., Remote, specific city)?"
 
     elif session['step'] == 'get_location':
-        session['preferred_location'] = normalize_input(user_input, "location")
+        session['preferred_location'] = normalize_location(user_input)
+        print(f"Normalized Job Location: {session['preferred_location']}")  # Debug log
         session['step'] = 'get_contract_type'
-        return "What is your preferred contract type? (Full-time or Part-time)"
+        return "What is your preferred contract type? (Full-time / Part-time)"
 
     elif session['step'] == 'get_contract_type':
         session['contract_type'] = normalize_input(user_input, "contract type")
+        print(f"Normalized Contract: {session['contract_type']}")  # Debug log
         session['step'] = 'get_remote_work'
-        return "Do you want remote work? (100% Remote, Hybrid, or No Remote)"
+        return "Do you want remote work? (Yes / Maybe / No)"
 
     elif session['step'] == 'get_remote_work':
-        session['remote_work_model'] = normalize_input(user_input, "remote work")
+        session['remote_work_model'] = normalize_remote_work(user_input)
+        print(f"Normalized Remote work model: {session['remote_work_model']}")  # Debug log
         session['step'] = 'get_visa_sponsorship'
-        return "Do you need visa sponsorship? (yes or no)"
+        return "Do you need visa sponsorship? (Yes / No)"
 
     elif session['step'] == 'get_visa_sponsorship':
-        session['visa_sponsorship'] = normalize_input(user_input, "visa sponsorship")
+        session['visa_sponsorship'] = normalize_visa_sponsorship(user_input)
+        print(f"Normalized Visa Sponsorship: {session['visa_sponsorship']}")  # Debug log
         session['step'] = 'show_recommendations'
         return show_recommendations()
 
@@ -242,7 +293,7 @@ def chatbot_logic(user_input):
             return "What is your preferred job title?"
         else:
             session['step'] = 'anything_else'
-            return "Anything else I can help you with? (yes or no)"
+            return "Anything else I can help you with? (Yes / No)"
 
     elif session['step'] == 'anything_else':
         if user_input == 'yes':
