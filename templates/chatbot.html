@@ -250,6 +250,10 @@
     </script>-->
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            displayMessage("Hello! How can I assist you today?", "bot");
+        });
+        
         document.getElementById("userInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();

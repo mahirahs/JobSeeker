@@ -20,7 +20,7 @@ openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_t
 DB_HOST = "localhost"
 DB_NAME = "iui_project"
 DB_USER = "postgres"
-DB_PASS = "iui"
+DB_PASS = "abcdefgh"
  
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 '''
