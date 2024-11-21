@@ -81,6 +81,24 @@
 
     <div class="w3-center w3-padding-64" id="savedjobs">
         <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">Saved Jobs</span>
+        <div class="w3-container">
+            <h1><b>Your Job Recommendations</b></h1>
+                <div class="job-container">
+                    {% if jobs %}
+                        {% for job in jobs %}
+                            <div class="job-entry">
+                                <strong>Title:</strong> {{ job[0] }}<br>
+                                <strong>Company:</strong> {{ job[1] }}<br>
+                                <strong>Location:</strong> {{ job[2] }}<br>
+                                <strong>Type:</strong> {{ job[3] }}<br>
+                                <strong>Remote:</strong> {{ job[4] }}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No job recommendations found for your account.</p>
+                    {% endif %}
+                </div>
+        </div>
     </div>
 
     <!-- Footer -->

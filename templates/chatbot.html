@@ -44,7 +44,9 @@
             border-radius: 15px 15px 15px 0;
             padding: 10px;
             max-width: 70%;
-            display: inline-block;
+            display: block;
+            clear: both;
+            margin-top: 10px;
         }
         .bot-avatar {
             width: 40px;
@@ -125,6 +127,7 @@
             <div class="input-area">
                 <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
                 <button onclick="sendMessage()">Send</button>
+                <button onclick="resetChat()" style="background-color: red; color: white; margin-left: 10px; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Reset</button>
             </div>
         </div>
     </div>
@@ -330,6 +333,10 @@
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight;
         }
+
+        function resetChat() {
+            location.reload(); // Refreshes the page to reset the chat
+        }
     
         function displayJobRecommendations(jobs, remaining) {
             const chatbox = document.getElementById('chatbox');
@@ -353,10 +360,47 @@
             //     displayMessage(`Do you want to see more results? (${remaining} remaining)`, 'bot', ['Yes', 'No']);
             // }
             if (remaining > 0) {
+                //const moreDiv = document.createElement('div');
+                //moreDiv.classList.add('message', 'bot-message');
+                //moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
+                //chatbox.appendChild(moreDiv);
+
                 const moreDiv = document.createElement('div');
                 moreDiv.classList.add('message', 'bot-message');
-                moreDiv.textContent = `Do you want to see more results? (${remaining} remaining)`;
+
+                // Add text content
+                const text = document.createElement('div');
+                text.textContent = `Do you want to see more results? (${remaining} remaining)`;
+                moreDiv.appendChild(text);
+
+                // Add Yes and No buttons
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.marginTop = '5px';
+
+                const yesButton = document.createElement('button');
+                yesButton.textContent = 'Yes';
+                yesButton.style.marginRight = '5px';
+                yesButton.onclick = () => {
+                    sendMessage('Yes'); // Simulate the "Yes" response
+                };
+
+                const noButton = document.createElement('button');
+                noButton.textContent = 'No';
+                noButton.onclick = () => {
+                    // Display "Happy Hunting!" when No is clicked
+                    setTimeout(() => {
+                        // Create a clean new message for "Happy Hunting!"
+                        displayMessage('Happy Hunting!', 'bot');
+                        }, 300);  
+                };
+
+                buttonContainer.appendChild(yesButton);
+                buttonContainer.appendChild(noButton);
+                moreDiv.appendChild(buttonContainer);
+
                 chatbox.appendChild(moreDiv);
+                chatbox.scrollTop = chatbox.scrollHeight;
             }
         }
     

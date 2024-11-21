@@ -472,9 +472,40 @@ def login():
 
 @app.route('/profile')
 def profile():
+    '''
     if 'firstname' in session:
         name = session['firstname']
         return render_template('profile.html', name=name)
+    else:
+        flash('Please log in to access your profile.')
+        return redirect(url_for('login'))
+    '''
+    if 'firstname' in session and 'user_id' in session:
+        name = session['firstname']
+        user_id = session['user_id']
+        cursor = conn.cursor()
+
+        # Query to retrieve saved jobs for the logged-in user
+        cursor.execute("""
+            SELECT title, company_name, location, type, remote 
+            FROM jobs 
+            WHERE user_id = %s
+        """, (user_id,))
+        saved_jobs = cursor.fetchall()  # Fetch all saved jobs
+        cursor.close()
+
+        # Convert saved jobs to a dictionary format
+        saved_jobs_list = [
+            {
+                'title': job[0],
+                'company_name': job[1],
+                'location': job[2],
+                'type': job[3],
+                'remote': job[4]
+            } for job in saved_jobs
+        ]
+
+        return render_template('profile.html', name=name, saved_jobs=saved_jobs_list)
     else:
         flash('Please log in to access your profile.')
         return redirect(url_for('login'))
