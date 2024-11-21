@@ -5,6 +5,7 @@ import psycopg2
 import openai
 import re
 import pandas as pd
+import os
 from MainFile import job_chatbot, normalize_input, normalize_location, normalize_remote_work, normalize_visa_sponsorship, filter_jobs, chat_with_Seeker
 from flask_session import Session
 # Initialize Flask app
@@ -14,13 +15,17 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 # Set OpenAI API key
-openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_tQ92CrfVFHGIviQ5LR8GBAOt4SSxXlWrYA"
+#openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_tQ92CrfVFHGIviQ5LR8GBAOt4SSxXlWrYA"
+with open("api_key.text", "r") as file:
+    openai.api_key = file.read().strip()
 
 # Connect to the PostgreSQL database
 DB_HOST = "localhost"
 DB_NAME = "iui_project"
 DB_USER = "postgres"
-DB_PASS = "abcdefgh"
+DB_PASS = "iui" # This works for Mahirah and Emory
+# DB_PASS = "abcdefgh" # This only works for Amalesh
+
  
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 '''
@@ -482,48 +487,12 @@ def login():
 
 @app.route('/profile')
 def profile():
-    '''
-    if 'firstname' in session:
-        name = session['firstname']
-        return render_template('profile.html', name=name)
-    else:
     if 'user_id' not in session:
-        flash('Please log in to access your profile.')
-        return redirect(url_for('login'))
-    '''
-    if 'firstname' in session and 'user_id' in session:
-        name = session['firstname']
-        user_id = session['user_id']
-        cursor = conn.cursor()
-
-        # Query to retrieve saved jobs for the logged-in user
-        cursor.execute("""
-            SELECT title, company_name, location, type, remote 
-            FROM jobs 
-            WHERE user_id = %s
-        """, (user_id,))
-        saved_jobs = cursor.fetchall()  # Fetch all saved jobs
-        cursor.close()
-
-        # Convert saved jobs to a dictionary format
-        saved_jobs_list = [
-            {
-                'title': job[0],
-                'company_name': job[1],
-                'location': job[2],
-                'type': job[3],
-                'remote': job[4]
-            } for job in saved_jobs
-        ]
-
-        return render_template('profile.html', name=name, saved_jobs=saved_jobs_list)
-    else:
-        flash('Please log in to access your profile.')
-        return redirect(url_for('login'))
+            flash('Please log in to access your profile.')
+            return redirect(url_for('login'))
 
     user_id = session['user_id']
     name = session.get('firstname', 'Guest')
-
     # Fetch saved jobs for the logged-in user
     cursor = conn.cursor()
     cursor.execute(
@@ -536,7 +505,6 @@ def profile():
     )
     jobs = cursor.fetchall()
     cursor.close()
-
     # Pass saved jobs and user name to the profile template
     return render_template('profile.html', name=name, jobs=jobs)
 
