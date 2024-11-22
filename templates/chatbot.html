@@ -271,10 +271,16 @@
     
         function displayJobRecommendations(jobs, remaining) {
             const chatbox = document.getElementById('chatbox');
+            
+            if (jobs.length === 0) {
+                displayMessage("Sorry, there are no jobs that match your preferences.", "bot");
+                return;
+            }
     
             jobs.forEach(job => {
                 const jobDiv = document.createElement('div');
                 jobDiv.className = 'job-card';
+                jobDiv.setAttribute('data-job-id', job.source_id);
                 jobDiv.innerHTML = `
                     <strong style="color: #000000;">Job Title:</strong> 
                     <span style="color: #000000;">${job.title}</span><br>
@@ -288,9 +294,10 @@
                     <span style="color: #E91E63;">${job.remote_work_model}</span><br>
                     <div>
                         <span class="thumbs" onclick="handleThumbsUp(${job.source_id})">👍</span>
-                        <span class="thumbs" onclick="handleThumbsDown()">👎</span>
+                        <span class="thumbs" onclick="handleThumbsDown(${job.source_id})">👎</span>
                     </div>
                 `;
+
                 chatbox.appendChild(jobDiv);
             });
     
@@ -373,9 +380,27 @@
             });
         }
     
-        function handleThumbsDown() {
-            alert('Job disliked.');
+        function handleThumbsDown(jobId) {
+            fetch('/delete_job', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ job_id: jobId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Job deleted successfully!');
+                    // Optionally remove the job card from the UI
+                    const jobCard = document.querySelector(`.job-card[data-job-id="${jobId}"]`);
+                    if (jobCard) {
+                        jobCard.remove();
+                    }
+                } else {
+                    alert('Failed to delete job.');
+                }
+            });
         }
+        
     </script>
     
     
