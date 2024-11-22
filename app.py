@@ -52,34 +52,8 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('login'))
 
-# Remove and display saved jobs in profile.html
-# @app.route('/jobs')
-# @app.route('/jobs.html')
-# def jobs():
-#     # Check if user is logged in
-#     if 'user_id' not in session:
-#         flash("Please log in to view your jobs.")
-#         return redirect(url_for('login'))
 
-#     user_id = session['user_id']
-#     cursor = conn.cursor()
 
-#     # Query to retrieve jobs for the logged-in user
-#     cursor.execute(
-#         """
-#         SELECT title, company_name, location, type, remote
-#         FROM jobs
-#         WHERE user_id = %s
-#         """,
-#         (user_id,)
-#     )
-    
-#     # Fetch all jobs associated with the user
-#     jobs = cursor.fetchall()
-#     cursor.close()
-
-#     # Pass job data to the template
-#     return render_template('jobs.html', jobs=jobs)
 
 @app.route('/save_job', methods=['POST'])
 def save_job():
@@ -493,6 +467,20 @@ def profile():
 
     user_id = session['user_id']
     name = session.get('firstname', 'Guest')
+
+    # Fetch user info
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT firstname, lastname, email
+        FROM users 
+        WHERE user_id = %s 
+        """,
+        (user_id,)
+    )
+    user_info = cursor.fetchone()
+    cursor.close()
+
     # Fetch saved jobs for the logged-in user
     cursor = conn.cursor()
     cursor.execute(
@@ -505,9 +493,36 @@ def profile():
     )
     jobs = cursor.fetchall()
     cursor.close()
-    # Pass saved jobs and user name to the profile template
-    return render_template('profile.html', name=name, jobs=jobs)
 
+    # Pass saved jobs and user name to the profile template
+    return render_template('profile.html', name=name, firstname=user_info[0], lastname=user_info[1], email=user_info[2], jobs=jobs)
+
+
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    if 'user_id' not in session:
+        return jsonify({"status": "error", "message": "Please log in"}), 403
+
+    user_id = session['user_id']
+    firstname = request.form.get('firstname')
+    lastname = request.form.get('lastname')
+    email = request.form.get('email')
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """
+            UPDATE users 
+            SET firstname = %s, lastname = %s, email = %s 
+            WHERE user_id = %s
+            """, 
+            (firstname, lastname, email,  user_id))
+        conn.commit()
+        return jsonify({"status": "success", "message": "Profile updated successfully"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+    finally:
+        cursor.close()
 
 
 @app.route('/home')
