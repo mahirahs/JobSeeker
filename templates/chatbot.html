@@ -345,9 +345,16 @@
                 const jobDiv = document.createElement('div');
                 jobDiv.className = 'job-card';
                 jobDiv.innerHTML = `
-                    <strong>Job Title:</strong> ${job.title}<br>
-                    <strong>Company:</strong> ${job.company}<br>
-                    <strong>Location:</strong> ${job.location}<br>
+                    <strong style="color: #000000;">Job Title:</strong> 
+                    <span style="color: #000000;">${job.title}</span><br>
+                    <strong style="color: #000000;">Company:</strong> 
+                    <span style="color: #2196F3;">${job.company}</span><br>
+                    <strong style="color: #000000;">Location:</strong> 
+                    <span style="color: #673AB7;">${job.location}</span><br>
+                    <strong style="color: #000000;">Type:</strong> 
+                    <span style="color: #3F51B5;">${job.types}</span><br>
+                    <strong style="color: #000000;">Remote:</strong> 
+                    <span style="color: #E91E63;">${job.remote_work_model}</span><br>
                     <div>
                         <span class="thumbs" onclick="handleThumbsUp(${job.source_id})">👍</span>
                         <span class="thumbs" onclick="handleThumbsDown()">👎</span>
