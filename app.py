@@ -23,7 +23,7 @@ with open("api_key.text", "r") as file:
 DB_HOST = "localhost"
 DB_NAME = "iui_project"
 DB_USER = "postgres"
-DB_PASS = "abcdefgh" # This works for Mahirah and Emory
+DB_PASS = "iui" # This works for Mahirah and Emory
 # DB_PASS = "abcdefgh" # This only works for Amalesh
 
  
@@ -147,6 +147,8 @@ def filter_jobs(title, location, contract_type, remote_work, visa_sponsorship):
 # Filter jobs with relaxed criteria
 def filter_jobs(preferred_title, preferred_location, contract_type, remote_work_model, visa_sponsorship):
     # Initial filtering based on job title, location, contract type, and remote work model
+    print("Filtering jobs based on preferences...")
+    print(f"Title: {preferred_title}, Location: {preferred_location}, Contract Type: {contract_type}, Remote: {remote_work_model}, Visa: {visa_sponsorship}")
     print("jobs type: ", type(jobs_listings))
     filtered_jobs = jobs_listings[
         (jobs_listings['title'].str.contains(preferred_title, case=False, na=False)) &
@@ -219,7 +221,7 @@ def chat():
     else:
         return jsonify({'response': response})
 
-def chatbot_logic(user_input):
+# def chatbot_logic(user_input):
     # Initialize conversation state if not set
     if 'step' not in session:
         session['step'] = 'start'
@@ -227,39 +229,49 @@ def chatbot_logic(user_input):
     # Step-based conversation handling
     if session['step'] == 'start':
         session['step'] = 'detailed_search'
-        return "Do you want a detailed job search? (Yes / No)"
+        # return "Do you want a detailed job search? (Yes / No)"
+        return {"response": "Do you want a detailed job search?", "options": ["Yes", "No"]}
 
     elif session['step'] == 'detailed_search':
         if user_input == 'yes':
             session['step'] = 'get_title'
-            return "What is your preferred job title?"
+            # return "What is your preferred job title?"
+            return {"response": "What is your preferred job title?"}
         else:
             session['step'] = 'anything_else'
-            return "Anything else I can help you with? (Yes / No)"
+            # return "Anything else I can help you with? (Yes / No)"
+            return {"response": "Anything else I can help you with?", "options": ["Yes", "No"]}
 
     elif session['step'] == 'get_title':
         session['preferred_title'] = normalize_input(user_input, "job title")
         print(f"Normalized Job Title: {session['preferred_title']}")  # Debug log
         session['step'] = 'get_location'
-        return "Preferred job location (e.g., Remote, specific city)?"
+        # return "Preferred job location (e.g., Remote, specific city)?"
+        return {"response": "Preferred job location (e.g., Remote, specific city)?"}
 
     elif session['step'] == 'get_location':
         session['preferred_location'] = normalize_location(user_input)
         print(f"Normalized Job Location: {session['preferred_location']}")  # Debug log
         session['step'] = 'get_contract_type'
-        return "What is your preferred contract type? (Full-time / Part-time)"
+        # return "What is your preferred contract type? (Full-time / Part-time)"
+        return {"response": "What is your preferred contract type?", "options": ["Full-time", "Part-time"]}
+
 
     elif session['step'] == 'get_contract_type':
         session['contract_type'] = normalize_input(user_input, "contract type")
         print(f"Normalized Contract: {session['contract_type']}")  # Debug log
         session['step'] = 'get_remote_work'
-        return "Do you want remote work? (Yes / Maybe / No)"
+        # return "Do you want remote work? (Yes / Maybe / No)"
+        return {"response": "Do you want remote work?", "options": ["Yes", "Maybe", "No"]}
+
 
     elif session['step'] == 'get_remote_work':
         session['remote_work_model'] = normalize_remote_work(user_input)
         print(f"Normalized Remote work model: {session['remote_work_model']}")  # Debug log
         session['step'] = 'get_visa_sponsorship'
-        return "Do you need visa sponsorship? (Yes / No)"
+        # return "Do you need visa sponsorship? (Yes / No)"
+        return {"response": "Do you need visa sponsorship?", "options": ["Yes", "No"]}
+
 
     elif session['step'] == 'get_visa_sponsorship':
         session['visa_sponsorship'] = normalize_visa_sponsorship(user_input)
@@ -289,7 +301,77 @@ def chatbot_logic(user_input):
 
     return "I'm not sure how to respond to that."
 
-    
+def chatbot_logic(user_input):
+    # Initialize conversation state if not set
+    if 'step' not in session:
+        session['step'] = 'start'
+
+    # Step-based conversation handling
+    if session['step'] == 'start':
+        session['step'] = 'detailed_search'
+        return {"response": "Do you want a detailed job search?", "options": ["Yes", "No"]}
+
+    elif session['step'] == 'detailed_search':
+        if user_input == 'yes':
+            session['step'] = 'get_title'
+            return {"response": "What is your preferred job title?"}
+        else:
+            session['step'] = 'anything_else'
+            return {"response": "Anything else I can help you with?", "options": ["Yes", "No"]}
+
+    elif session['step'] == 'get_title':
+        session['preferred_title'] = normalize_input(user_input, "job title")
+        print(f"Normalized Job Title: {session['preferred_title']}")  # Debug log
+        session['step'] = 'get_location'
+        return {"response": "Preferred job location (e.g., Remote, specific city)?"}
+
+    elif session['step'] == 'get_location':
+        session['preferred_location'] = normalize_location(user_input)
+        print(f"Normalized Job Location: {session['preferred_location']}")  # Debug log
+        session['step'] = 'get_contract_type'
+        return {"response": "What is your preferred contract type?", "options": ["Full-time", "Part-time"]}
+
+    elif session['step'] == 'get_contract_type':
+        session['contract_type'] = normalize_input(user_input, "contract type")
+        print(f"Normalized Contract: {session['contract_type']}")  # Debug log
+        session['step'] = 'get_remote_work'
+        return {"response": "Do you want remote work?", "options": ["Yes", "Maybe", "No"]}
+
+    elif session['step'] == 'get_remote_work':
+        session['remote_work_model'] = normalize_remote_work(user_input)
+        print(f"Normalized Remote work model: {session['remote_work_model']}")  # Debug log
+        session['step'] = 'get_visa_sponsorship'
+        return {"response": "Do you need visa sponsorship?", "options": ["Yes", "No"]}
+
+    elif session['step'] == 'get_visa_sponsorship':
+        session['visa_sponsorship'] = normalize_visa_sponsorship(user_input)
+        print(f"Normalized Visa Sponsorship: {session['visa_sponsorship']}")  # Debug log
+        session['step'] = 'show_recommendations'
+        return show_recommendations()
+
+    elif session['step'] == 'show_recommendations':
+        if user_input == 'yes':
+            response = show_recommendations()
+            if response['jobs']:
+                return response
+            else:
+                session['step'] = 'anything_else'
+                return {"response": "No more results available. Anything else I can help you with?", "options": ["Yes", "No"]}
+        else:
+            session['step'] = 'anything_else'
+            return {"response": "Anything else I can help you with?", "options": ["Yes", "No"]}
+
+    elif session['step'] == 'anything_else':
+        if user_input == 'yes':
+            session['step'] = 'start'  # Restart conversation
+            return {"response": "What else can I help you with?"}
+        else:
+            session.clear()
+            return {"response": "Happy Hunting!"}
+
+    # Default response if no valid step is found
+    return {"response": "I'm not sure how to respond to that."}
+
 def show_recommendations():
     # Retrieve user preferences from session
     title = session.get('preferred_title')
@@ -349,7 +431,6 @@ def show_recommendations():
         'jobs': next_batch,
         'remaining': max(0, total_jobs - session['batch_index'])
     }
-
 
 
 

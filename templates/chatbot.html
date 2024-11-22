@@ -136,122 +136,6 @@
         <p>&copy; 2024 JobSeeker. All Rights Reserved.</p>
     </footer>
 
-    <!--<script>
-        document.getElementById("userInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                sendMessage();
-            }
-        });
-
-        function sendMessage() {
-            const userMessage = document.getElementById('userInput').value.trim();
-            if (!userMessage) return;
-            displayMessage(userMessage, 'user');
-            document.getElementById('userInput').value = '';
-
-            fetch('/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.jobs) {
-                    displayJobRecommendations(data.jobs, data.remaining);
-                } else {
-                    displayMessage(data.response, 'bot');
-                }
-            });
-        }
-
-        // function displayMessage(message, sender) {
-            const chatbox = document.getElementById('chatbox');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
-
-            if (sender === 'bot') {
-                const avatar = document.createElement('div');
-                avatar.className = 'bot-avatar';
-                avatar.textContent = 'AI';
-                messageDiv.appendChild(avatar);
-            }
-
-            const text = document.createElement('div');
-            text.textContent = message;
-            messageDiv.appendChild(text);
-            chatbox.appendChild(messageDiv);
-            chatbox.scrollTop = chatbox.scrollHeight;
-        }
-
-        function displayMessage(message, sender, options = []) {
-            const chatbox = document.getElementById('chatbox');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
-
-            if (sender === 'bot') {
-                const avatar = document.createElement('div');
-                avatar.className = 'bot-avatar';
-                avatar.textContent = 'AI';
-                messageDiv.appendChild(avatar);
-            }
-
-            const text = document.createElement('div');
-            text.textContent = message;
-            messageDiv.appendChild(text);
-
-            // Display quick reply buttons if options are provided
-            if (options.length > 0) {
-                options.forEach(option => {
-                    const button = document.createElement('button');
-                    button.className = 'quick-reply';
-                    button.textContent = option;
-                    button.onclick = () => {
-                        displayMessage(option, 'user');
-                        chatbox.scrollTop = chatbox.scrollHeight;
-                        sendMessage(option);  // Send the option as the user's message
-                    };
-                    messageDiv.appendChild(button);
-                });
-            }
-
-            chatbox.appendChild(messageDiv);
-            chatbox.scrollTop = chatbox.scrollHeight;
-        }
-
-
-        function displayJobRecommendations(jobs, remaining) {
-            const chatbox = document.getElementById('chatbox');
-
-            jobs.forEach(job => {
-                const jobDiv = document.createElement('div');
-                jobDiv.className = 'job-card';
-                jobDiv.innerHTML = `
-                    <strong>Job Title:</strong> ${job.title}<br>
-                    <strong>Company:</strong> ${job.company}<br>
-                    <strong>Location:</strong> ${job.location}<br>
-                    <div>
-                        <span class="thumbs" onclick="handleThumbsUp(${job.source_id})">👍</span>
-                        <span class="thumbs" onclick="handleThumbsDown()">👎</span>
-                    </div>
-                `;
-                chatbox.appendChild(jobDiv);
-            });
-
-            if (remaining > 0) {
-                displayMessage(`Do you want to see more results? (${remaining} remaining)`, 'bot');
-            }
-        }
-
-        function handleThumbsUp(jobId) {
-            alert(`Saved job ID: ${jobId}`);
-        }
-
-        function handleThumbsDown() {
-            alert('Job disliked.');
-        }
-    </script>-->
-
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             displayMessage("Hello! How can I assist you today?", "bot");
@@ -266,73 +150,120 @@
     
         function sendMessage(userMessage = null) {
             const messageInput = document.getElementById('userInput');
-            const userMessageText = userMessage || messageInput.value.trim();
-            if (!userMessageText) return;
-    
+            const userMessageText = userMessage || messageInput.value.trim(); // Use clicked option or input value
+            if (!userMessageText) return; // Exit if no input
+
+            // Display the user's message in the chatbox
             displayMessage(userMessageText, 'user');
-            messageInput.value = '';
-    
+            messageInput.value = ''; // Clear the input field
+
+            // Send the message to the server
             fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: userMessageText })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.jobs) {
-                    displayJobRecommendations(data.jobs, data.remaining);
-                } else {
-                    // Check if there are predefined options (e.g., Yes/No) in the response
-                    if (data.options) {
+                .then(response => response.json())
+                .then(data => {
+                    // Handle server response
+                    if (data.jobs) {
+                        // Display job recommendations if present
+                        displayJobRecommendations(data.jobs, data.remaining);
+                    } else if (data.options) {
+                        // Display bot response with clickable options
                         displayMessage(data.response, 'bot', data.options);
                     } else {
+                        // Display a standard bot response
                         displayMessage(data.response, 'bot');
                     }
-                }
-            });
+                })
+                .catch(error => console.error('Error:', error));
         }
+
     
+        // function displayMessage(message, sender, options = []) {
+        //     const chatbox = document.getElementById('chatbox');
+        //     const messageDiv = document.createElement('div');
+        //     messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
+    
+        //     if (sender === 'bot') {
+        //         const avatar = document.createElement('div');
+        //         avatar.className = 'bot-avatar';
+        //         avatar.textContent = 'AI';
+        //         messageDiv.appendChild(avatar);
+        //     }
+    
+        //     const text = document.createElement('div');
+        //     text.textContent = message;
+        //     messageDiv.appendChild(text);
+    
+        //     // Display quick reply buttons if options are provided
+        //     if (options.length > 0) {
+        //         const buttonContainer = document.createElement('div');
+        //         buttonContainer.style.display = 'flex';
+        //         buttonContainer.style.marginTop = '5px';
+    
+        //         options.forEach(option => {
+        //             const button = document.createElement('button');
+        //             button.className = 'quick-reply';
+        //             button.textContent = option;
+        //             button.onclick = () => {
+        //                 displayMessage(option, 'user');
+        //                 chatbox.scrollTop = chatbox.scrollHeight;
+        //                 sendMessage(option);  // Send the option as the user's message
+        //             };
+        //             button.style.marginRight = '5px';
+        //             buttonContainer.appendChild(button);
+        //         });
+    
+        //         messageDiv.appendChild(buttonContainer);
+        //     }
+    
+        //     chatbox.appendChild(messageDiv);
+        //     chatbox.scrollTop = chatbox.scrollHeight;
+        // }
+
         function displayMessage(message, sender, options = []) {
             const chatbox = document.getElementById('chatbox');
             const messageDiv = document.createElement('div');
             messageDiv.className = sender === 'bot' ? 'message bot-message' : 'message user-message';
-    
+
             if (sender === 'bot') {
                 const avatar = document.createElement('div');
                 avatar.className = 'bot-avatar';
                 avatar.textContent = 'AI';
                 messageDiv.appendChild(avatar);
             }
-    
+
             const text = document.createElement('div');
             text.textContent = message;
             messageDiv.appendChild(text);
-    
-            // Display quick reply buttons if options are provided
+
+            // Display buttons for options
             if (options.length > 0) {
                 const buttonContainer = document.createElement('div');
                 buttonContainer.style.display = 'flex';
                 buttonContainer.style.marginTop = '5px';
-    
+
                 options.forEach(option => {
                     const button = document.createElement('button');
-                    button.className = 'quick-reply';
                     button.textContent = option;
-                    button.onclick = () => {
-                        displayMessage(option, 'user');
-                        chatbox.scrollTop = chatbox.scrollHeight;
-                        sendMessage(option);  // Send the option as the user's message
-                    };
                     button.style.marginRight = '5px';
+                    button.onclick = () => {
+                        // displayMessage(option, 'user'); // Show user's choice
+                        sendMessage(option); // Send the choice as a message
+                        buttonContainer.remove(); // Remove the buttons after a selection is made
+                    };
                     buttonContainer.appendChild(button);
                 });
-    
+
                 messageDiv.appendChild(buttonContainer);
             }
-    
+
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight;
         }
+
 
         function resetChat() {
             location.reload(); // Refreshes the page to reset the chat
