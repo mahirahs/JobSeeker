@@ -389,7 +389,19 @@
                 yesButton.textContent = 'Yes';
                 yesButton.style.marginRight = '5px';
                 yesButton.onclick = () => {
-                    sendMessage('Yes'); // Simulate the "Yes" response
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: 'Yes' })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.jobs) {
+                            displayJobRecommendations(data.jobs, data.remaining);
+                        } else {
+                            displayMessage(data.response, 'bot');
+                        }
+                    });
                 };
 
                 const noButton = document.createElement('button');

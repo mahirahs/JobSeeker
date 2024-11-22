@@ -23,7 +23,7 @@ with open("api_key.text", "r") as file:
 DB_HOST = "localhost"
 DB_NAME = "iui_project"
 DB_USER = "postgres"
-DB_PASS = "iui" # This works for Mahirah and Emory
+DB_PASS = "abcdefgh" # This works for Mahirah and Emory
 # DB_PASS = "abcdefgh" # This only works for Amalesh
 
  
@@ -269,8 +269,12 @@ def chatbot_logic(user_input):
 
     elif session['step'] == 'show_recommendations':
         if user_input == 'yes':
-            session['step'] = 'get_title'  # Start a new search
-            return "What is your preferred job title?"
+            response = show_recommendations()
+            if response['jobs']:
+                return response
+            else:
+                session['step'] = 'anything_else'
+                return "No more results available. Anything else I can help you with? (Yes / No)"
         else:
             session['step'] = 'anything_else'
             return "Anything else I can help you with? (Yes / No)"
@@ -341,14 +345,10 @@ def show_recommendations():
     next_batch = recommendations[batch_index:batch_index + batch_size]
     session['batch_index'] += batch_size  # Update index for the next call
 
-    # Prepare response for the client
-    response = {
+    return {
         'jobs': next_batch,
         'remaining': max(0, total_jobs - session['batch_index'])
     }
-    
-    print("Response sent to client:", response)  # Debugging output
-    return response
 
 
 
