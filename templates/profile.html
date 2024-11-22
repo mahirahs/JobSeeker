@@ -277,67 +277,70 @@
         </div>
     </div>
 
-    <div class="profile-container">
-        <h1>Hello {{ name }}! Welcome to JobSeeker</h1>
-        <p>We're excited to help you find your dream job.</p>
-    </div>
+    <div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
 
-
-    <div class="section-container" id="profile">
-        <div class="container-box">
-            <h1><b>Profile Information</b></h1>
-            <div class="profile-field">
-                <strong>First Name:</strong> {{ firstname }}
-            </div>
-            <div class="profile-field">
-                <strong>Last Name:</strong> {{ lastname }}
-            </div>
-            <div class="profile-field">
-                <strong>Email:</strong> {{ email }}
-            </div>
-            <button onclick="editProfile()">Edit Profile</button>
+        <div class="profile-container">
+            <h1>Hello {{ name }}! Welcome to JobSeeker</h1>
+            <p>We're excited to help you find your dream job.</p>
         </div>
-    </div>
-    
-    <div class="saved-jobs-section" id="savedjobs">
-        <div class="job-container">
-            <h1 style="text-align: center;"><b>Your Saved Jobs</b></h1>
-            {% if jobs %}
-                {% for job in jobs %}
-                    <div class="job-entry">
-                        <strong>Title:</strong> {{ job[0] }}<br>
-                        <strong>Company:</strong> {{ job[1] }}<br>
-                        <strong>Location:</strong> {{ job[2] }}<br>
-                        <strong>Type:</strong> {{ job[3] }}<br>
-                        <strong>Remote:</strong> {{ job[4] }}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p style="text-align: center;">No saved jobs found for your account.</p>
-            {% endif %}
+
+        <div class="section-container" id="profile">
+            <div class="container-box">
+                <h1><b>Profile Information</b></h1>
+                <div class="profile-field">
+                    <strong>First Name:</strong> {{ firstname }}
+                </div>
+                <div class="profile-field">
+                    <strong>Last Name:</strong> {{ lastname }}
+                </div>
+                <div class="profile-field">
+                    <strong>Email:</strong> {{ email }}
+                </div>
+                <button onclick="editProfile()">Edit Profile</button>
+            </div>
         </div>
-    </div>
-
-    <div id="editProfileModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Edit Profile</h2>
-            <form id="editProfileForm">
-                <label for="firstname">First Name:</label>
-                <input type="text" id="firstname" name="firstname" value="{{ firstname }}" required>
-
-                <label for="lastname">Last Name:</label>
-                <input type="text" id="lastname" name="lastname" value="{{ lastname }}" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="{{ email }}" required>
-
-                <label for="preferences">Preferences:</label>
-                <textarea id="preferences" name="preferences" required>{{ preferences }}</textarea>
-                
-                <button type="submit">Save Changes</button>
-            </form>
+        
+        <div class="saved-jobs-section" id="savedjobs">
+            <div class="job-container">
+                <h1 style="text-align: center;"><b>Your Saved Jobs</b></h1>
+                {% if jobs %}
+                    {% for job in jobs %}
+                        <div class="job-entry">
+                            <strong>Title:</strong> {{ job[0] }}<br>
+                            <strong>Company:</strong> {{ job[1] }}<br>
+                            <strong>Location:</strong> {{ job[2] }}<br>
+                            <strong>Type:</strong> {{ job[3] }}<br>
+                            <strong>Remote:</strong> {{ job[4] }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center;">No saved jobs found for your account.</p>
+                {% endif %}
+            </div>
         </div>
+
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Edit Profile</h2>
+                <form id="editProfileForm">
+                    <label for="firstname">First Name:</label>
+                    <input type="text" id="firstname" name="firstname" value="{{ firstname }}" required>
+
+                    <label for="lastname">Last Name:</label>
+                    <input type="text" id="lastname" name="lastname" value="{{ lastname }}" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ email }}" required>
+
+                    <label for="preferences">Preferences:</label>
+                    <textarea id="preferences" name="preferences" required>{{ preferences }}</textarea>
+                    
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <!-- Footer -->
