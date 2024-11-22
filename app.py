@@ -16,7 +16,8 @@ Session(app)
 
 # Set OpenAI API key
 #openai.api_key = "sk-UCiVzm0xlj6cS5UXHGV3wjhBSB8fhdWG2s8mUdcqCYT3BlbkFJag1xk-S_tQ92CrfVFHGIviQ5LR8GBAOt4SSxXlWrYA"
-with open("api_key.text", "r") as file:
+#api_key.text = "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"
+with open("api_key.txt", "r") as file:
     openai.api_key = file.read().strip()
 
 # Connect to the PostgreSQL database
@@ -52,6 +53,28 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('login'))
 
+@app.route('/delete_job', methods=['DELETE'])
+def delete_job():
+    data = request.json
+    job_id = data.get('job_id')
+    user_id = session.get('user_id')
+
+    # Check if job_id and user_id are valid
+    if not job_id or not user_id:
+        return jsonify({"status": "error", "message": "Invalid job ID or user session"}), 400
+
+    cursor = conn.cursor()
+    try:
+        # Delete the job for the current user
+        cursor.execute("DELETE FROM jobs WHERE job_id = %s AND user_id = %s", (job_id, user_id))
+        conn.commit()
+        if cursor.rowcount > 0:
+            return jsonify({"status": "success"})
+        else:
+            return jsonify({"status": "error", "message": "Job not found"}), 404
+    except Exception as e:
+        print("Error deleting job:", e)
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 
@@ -426,6 +449,14 @@ def show_recommendations():
     # Get the current batch of jobs
     next_batch = recommendations[batch_index:batch_index + batch_size]
     session['batch_index'] += batch_size  # Update index for the next call
+    
+    '''if len(next_batch) == 0:
+        return {
+            'jobs': "There are no jobs that match your preferences.",
+            'remaining': max(0, total_jobs - session['batch_index'])
+        }
+    
+    else:'''
 
     return {
         'jobs': next_batch,
